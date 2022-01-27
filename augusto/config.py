@@ -1,8 +1,8 @@
-from turtle import width
-
+# Arquivo de configurações
 
 TITLE = 'A Maze'
 
+FPS = 30
 WIDTH = 400
 HEIGHT = 400
 
