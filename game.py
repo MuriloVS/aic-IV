@@ -1,7 +1,7 @@
 import pygame as pg
 
 from util.game_base import GameBase
-from config import *
+from util.config import *
 
 
 class Game(GameBase):

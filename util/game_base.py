@@ -4,7 +4,7 @@ from scenes.menu_inicial import MenuInicial
 from scenes.maze import Maze
 from sprites.player import Player
 
-from config import *
+from util.config import *
 
 
 class GameBase():

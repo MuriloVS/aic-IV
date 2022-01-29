@@ -1,8 +1,7 @@
 import pygame as pg
 from pathlib import Path
-import os
 
-from config import *
+from util.config import *
 
 
 vector = pg.math.Vector2
