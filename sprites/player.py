@@ -7,6 +7,7 @@ from config import *
 
 vector = pg.math.Vector2
 
+
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y, color=(0,0,0)):
         pg.sprite.Sprite.__init__(self)
