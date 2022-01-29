@@ -1,7 +1,7 @@
 import pygame as pg
-from sprites.player_test import PlayerTest
 
-from sprites.maze import Maze
+from scenes.menu_inicial import MenuInicial
+from scenes.maze import Maze
 from sprites.player import Player
 
 from config import *

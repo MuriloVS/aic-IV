@@ -1,5 +1,5 @@
 import pygame
-from network import Network
+network import Network
 from player import Player
 
 # tamanho da tela

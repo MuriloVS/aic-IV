@@ -1,10 +1,8 @@
 import pygame as pg
 
-from game import Game
-
 
 class MenuInicial():
-    def __init__(self, game: Game):
+    def __init__(self, game):
         pass
 
     def load_data(self):

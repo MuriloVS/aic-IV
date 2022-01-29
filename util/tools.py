@@ -53,4 +53,4 @@ def make_maze(w = 3, h =3):
     return s
 
 if __name__ == '__main__':
-    print(make_maze())
+    print(make_maze(10, 10))

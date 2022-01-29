@@ -1,4 +1,7 @@
-from game_base import GameBase
+import pygame as pg
+
+from util.game_base import GameBase
+from config import *
 
 
 class Game(GameBase):
@@ -46,15 +49,6 @@ class Game(GameBase):
 
 
 if __name__ == '__main__':
-
-    import pygame as pg
-
-    from sprites.menu_inicial import MenuInicial
-    from sprites.maze import Maze
-    from sprites.player import Player
-    from sprites.player_test import PlayerTest
-
-    from config import *
 
     g = Game()
     g.load_scene(scene=MAZE, lvl=0)
