@@ -1,10 +1,11 @@
 import pygame as pg
-import pathlib
+from config import ROOT
 
 from config import *
 
 
 vector = pg.math.Vector2
+
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y, color):
@@ -12,7 +13,8 @@ class Player(pg.sprite.Sprite):
 
         self.game = game
 
-        self.image = pg.image.load("/media/images/tv.png").convert()
+        self.image = pg.image.load(os.path.join(
+            ROOT, 'media', 'images', 'tv.png')).convert()
         self.rect = self.image.get_rect()
 
         self.rect.midbottom = (MIDSCREEN_X, MIDSCREEN_Y)
