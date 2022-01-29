@@ -1,5 +1,6 @@
 import pygame as pg
-import pathlib
+from pathlib import Path
+import os
 
 from config import *
 
@@ -7,12 +8,13 @@ from config import *
 vector = pg.math.Vector2
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, game, x, y, color):
+    def __init__(self, game, x, y, color=(0,0,0)):
         pg.sprite.Sprite.__init__(self)
 
         self.game = game
 
-        self.image = pg.image.load("/media/images/tv.png").convert()
+        path = Path("media", "images", "tv.png")
+        self.image = pg.image.load(path).convert()
         self.rect = self.image.get_rect()
 
         self.rect.midbottom = (MIDSCREEN_X, MIDSCREEN_Y)
@@ -21,6 +23,7 @@ class Player(pg.sprite.Sprite):
         self.acc = vector(0, 0)
         self.x = x
         self.y = y
+        self.z = 0
 
     def update(self):
         self.acc = vector(0, 0)

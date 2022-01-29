@@ -127,4 +127,4 @@ while not done:
 
 for a in range (0, rows):
     for b in range (0, cols):
-        print(grid[a][b].walls)
+        print(f'{a} {b} {grid[a][b].walls}')
