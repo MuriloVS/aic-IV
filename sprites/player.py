@@ -1,6 +1,4 @@
 import pygame as pg
-from config import ROOT
-
 from config import *
 
 
