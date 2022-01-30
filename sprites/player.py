@@ -8,7 +8,7 @@ vector = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, game, x, y, color=(0,0,0)):
+    def __init__(self, game, pos_x, pos_y):
         pg.sprite.Sprite.__init__(self)
 
         self.game = game
@@ -21,9 +21,8 @@ class Player(pg.sprite.Sprite):
         self.pos = vector(self.rect.midbottom)
         self.vel = vector(0, 0)
         self.acc = vector(0, 0)
-        self.x = x
-        self.y = y
-        self.z = 0
+        self.x = pos_x
+        self.y = pos_y
 
     def update(self):
         self.acc = vector(0, 0)

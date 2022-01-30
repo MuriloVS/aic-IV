@@ -1,20 +1,26 @@
 import pygame as pg
 
-from util.game_base import GameBase
+from scenes.menu_inicial import MenuInicial
+from scenes.maze import Maze
+from sprites.player import Player
+
 from util.config import *
 
 
-class Game(GameBase):
+class Game():
 
     def __init__(self):
-        super().__init__()
 
         pg.init()
         pg.mixer.init()
         pg.display.set_caption(TITLE)
 
-        self.window = pg.display.set_mode((WIDTH, HEIGHT))
+        self.window = pg.display.set_mode((WIDTH, HEIGHT), pg.RESIZABLE)
         self.clock = pg.time.Clock()
+
+        # self.lock_input = False
+        self.players = pg.sprite.Group()
+        self.walls = pg.sprite.Group()
 
         self.scene = ''
         self.load_scene(scene=MENU_PRINCIPAL)
@@ -25,31 +31,62 @@ class Game(GameBase):
         while self.run:
             self.clock.tick(FPS)
 
-            for event in pg.event.get():
-                self.quit_check(event)
-                #self.get_input(event)
-
+            self.event_check()
             self.update()
             self.draw()
+            
+            pg.display.flip()
+
         pg.quit()
 
+    def event_check(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.run = False
+
     def update(self):
-        #self.sprites.update()
-        self.player.update()
+        self.walls.update()
+        self.players.update()
 
     def draw(self):
         self.window.fill(BLACK)
 
-        self.sprites.draw(self.window)
+        # desenha todos os objetos na tela
+        self.walls.draw(self.window)
+        self.players.draw(self.window)
+        #self.window.blit((self.player1.image), (self.player1.rect)) # não necessário
 
-        self.window.blit((self.player.image), (self.player.rect))
-        # self.player.draw() # TESTE
-        
-        pg.display.flip()
+    def load_scene(self, scene, **kwargs):
+        self.scene = scene
+        self.walls.empty()
+        self.players.empty()
 
+        if self.scene == MENU_PRINCIPAL:
+            pass
 
-if __name__ == '__main__':
+        elif self.scene == LOBBY:
+            pass
 
-    g = Game()
-    g.load_scene(scene=MAZE, lvl=0)
-    g.loop()
+        elif self.scene == MAZE:
+            # recebendo parâmetros do labirinto
+            level = kwargs.get('level')
+            numPlayers = kwargs.get('numeroPlayers')
+
+            # criando o labirinto
+            self.maze = Maze(game=self, level=level, numPlayers=numPlayers)
+            self.maze.build()
+            #x, y = self.maze.get_player_position()
+
+            self.player1 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
+            #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
+
+            # adicionando sprites aos grupos
+            for wall in self.maze.walls:
+                self.walls.add(wall)
+            self.players.add(self.player1)
+
+        elif self.scene == PAUSE:
+            pass
+
+        elif self.scene == GAME_OVER:
+            pass     

@@ -1,6 +1,5 @@
 # Arquivo de configuração
 import os
-ROOT = os.getcwd()
 
 # janela
 TITLE = 'A Maze'
