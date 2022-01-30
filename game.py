@@ -73,11 +73,11 @@ class Game():
             numPlayers = kwargs.get('numeroPlayers')
 
             # criando o labirinto
-            self.maze = Maze(game=self, level=level, numPlayers=numPlayers)
+            self.maze = Maze(level, numPlayers)
             self.maze.build()
             #x, y = self.maze.get_player_position()
 
-            self.player1 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
+            self.player1 = Player(MIDSCREEN_X, MIDSCREEN_Y)
             #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
 
             # adicionando sprites aos grupos

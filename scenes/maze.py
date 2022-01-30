@@ -82,7 +82,6 @@ class Maze():
 
                 current.visited = True
 
-            self._build_walls()
             return True
 
         else:

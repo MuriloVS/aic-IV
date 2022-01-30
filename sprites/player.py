@@ -8,10 +8,8 @@ vector = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, game, pos_x, pos_y):
+    def __init__(self, pos_x, pos_y):
         pg.sprite.Sprite.__init__(self)
-
-        self.game = game
 
         path = Path("media", "images", "tv.png")
         self.image = pg.image.load(path).convert()

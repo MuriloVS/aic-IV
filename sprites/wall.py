@@ -8,7 +8,7 @@ vector = pg.math.Vector2
 
 
 class Wall(pg.sprite.Sprite):
-    def __init__(self, x, y, orientacao, posicao):
+    def __init__(self, pos_x, pos_y, orientacao, posicao):
         pg.sprite.Sprite.__init__(self)
 
         self.x = x*30+50
@@ -16,7 +16,7 @@ class Wall(pg.sprite.Sprite):
 
         path = Path("media", "images", "tv.png")
         self.image = pg.image.load(path).convert()
-        #self.image = pg.Surface()
+        self.image = pg.Surface()
 
         if orientacao == 'v':
             self.image = pg.transform.scale(self.image, (50,25))
