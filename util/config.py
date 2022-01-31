@@ -1,11 +1,16 @@
 # Arquivo de configuração
-import os
+import pygame as pg
+import time
 
 # janela
 TITLE = 'A Maze'
 FPS = 30
-WIDTH = 400
-HEIGHT = 400
+
+# tamanho da tela inteira
+pg.init() 
+screen = pg.display.set_mode() 
+SCREENWIDTH, SCREENHEIGHT = screen.get_size() 
+pg.display.quit() 
 
 # player property
 PLAYER_ACC = 1
@@ -19,12 +24,12 @@ GAME_OVER = 3
 PAUSE = 4
 
 # measures
-FLOOR = (HEIGHT * 7) // 8
+FLOOR = (SCREENHEIGHT * 7) // 8
 FLOOR_OBJ = FLOOR + 10
-MIDSCREEN_Y = HEIGHT / 2
-MIDSCREEN_X = WIDTH / 2
-QUARTERSCREEN_X = WIDTH / 4
-QUARTERSCREEN_Y = HEIGHT / 4
+MIDSCREEN_Y = SCREENHEIGHT / 2
+MIDSCREEN_X = SCREENWIDTH / 2
+QUARTERSCREEN_X = SCREENWIDTH / 4
+QUARTERSCREEN_Y = SCREENHEIGHT / 4
 
 # define colors
 BLACK = (0, 0, 0)

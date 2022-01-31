@@ -37,18 +37,18 @@ class Maze():
 
         self.walls = []
 
-    def print_maze(self):
-        for i in range(self.cols):
-            for j in range(self.rows):
-                print(f'{i} {j} {self.grid[i][j].walls}')
-
-    def build(self, init=(0,0)):
-
         self.grid = [[Spot(i, j) for j in range(self.cols)] for i in range(self.rows)]
 
         for i in range(self.rows):
             for j in range(self.cols):
                 self.grid[i][j].add_neighbors(self.grid, self.rows, self.cols)
+
+    def print_maze(self):
+        for i in range(self.rows):
+            for j in range(self.cols):
+                print(f'{i} {j} {self.grid[i][j].walls}')
+
+    def build(self, init=(0,0)):
 
         if not self.completed:
 
@@ -80,12 +80,7 @@ class Maze():
                 if not self.completed:
                     self._break_walls(current, self.visited[len(self.visited)-1])
 
-                current.visited = True
-
-            return True
-
-        else:
-            return False      
+                current.visited = True  
 
     def _break_walls(self, a, b):
         if a.y == b.y and a.x > b.x:

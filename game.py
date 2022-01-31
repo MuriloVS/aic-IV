@@ -9,16 +9,15 @@ from util.config import *
 
 class Game():
 
-    def __init__(self):
+    def __init__(self, window):
 
-        pg.init()
-        pg.mixer.init()
+        self.window = window     
+
         pg.display.set_caption(TITLE)
+        # pg.mixer.init()
 
-        self.window = pg.display.set_mode((WIDTH, HEIGHT), pg.RESIZABLE)
         self.clock = pg.time.Clock()
 
-        # self.lock_input = False
         self.players = pg.sprite.Group()
         self.walls = pg.sprite.Group()
 
@@ -77,7 +76,7 @@ class Game():
             self.maze.build()
             #x, y = self.maze.get_player_position()
 
-            self.player1 = Player(MIDSCREEN_X, MIDSCREEN_Y)
+            self.player1 = Player(SCREENWIDTH/2, SCREENHEIGHT/2)
             #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
 
             # adicionando sprites aos grupos

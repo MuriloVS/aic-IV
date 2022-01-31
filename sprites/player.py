@@ -15,7 +15,7 @@ class Player(pg.sprite.Sprite):
         self.image = pg.image.load(path).convert()
         self.rect = self.image.get_rect()
 
-        self.rect.midbottom = (MIDSCREEN_X, MIDSCREEN_Y)
+        self.rect.midbottom = (SCREENWIDTH/2, SCREENHEIGHT/2)
         self.pos = vector(self.rect.midbottom)
         self.vel = vector(0, 0)
         self.acc = vector(0, 0)
