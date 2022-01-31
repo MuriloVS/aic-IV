@@ -2,7 +2,6 @@ import pygame as pg
 
 from config import *
 
-
 def wait_for_key() -> bool:
     waiting = True
     while waiting:

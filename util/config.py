@@ -1,16 +1,14 @@
-# Arquivo de configuração
 import pygame as pg
-import time
+
+# Arquivo de configuração
 
 # janela
 TITLE = 'A Maze'
 FPS = 30
 
 # tamanho da tela inteira
-pg.init() 
-screen = pg.display.set_mode() 
-SCREENWIDTH, SCREENHEIGHT = screen.get_size() 
-pg.display.quit() 
+SCREENWIDTH = 1200
+SCREENHEIGHT = 700
 
 # player property
 PLAYER_ACC = 1

@@ -9,9 +9,11 @@ from util.config import *
 
 class Game():
 
-    def __init__(self, window):
+    def __init__(self, window:pg.display):
 
         self.window = window     
+        self.rect = self.window.get_rect()
+        self.rect.center = (SCREENWIDTH, SCREENHEIGHT)
 
         pg.display.set_caption(TITLE)
         # pg.mixer.init()
@@ -21,8 +23,7 @@ class Game():
         self.players = pg.sprite.Group()
         self.walls = pg.sprite.Group()
 
-        self.scene = ''
-        self.load_scene(scene=MENU_PRINCIPAL)
+        self.scene = MENU_PRINCIPAL
 
     def loop(self):
 
@@ -55,7 +56,7 @@ class Game():
         self.players.draw(self.window)
         #self.window.blit((self.player1.image), (self.player1.rect)) # não necessário
 
-    def load_scene(self, scene, **kwargs):
+    def load_scene(self, scene=MENU_PRINCIPAL, **kwargs):
         self.scene = scene
         self.walls.empty()
         self.players.empty()
@@ -74,6 +75,7 @@ class Game():
             # criando o labirinto
             self.maze = Maze(level, numPlayers)
             self.maze.build()
+            self.maze.build_walls()
             #x, y = self.maze.get_player_position()
 
             self.player1 = Player(SCREENWIDTH/2, SCREENHEIGHT/2)

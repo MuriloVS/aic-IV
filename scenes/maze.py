@@ -26,17 +26,20 @@ class Spot:
 
 
 class Maze():
-    def __init__(self, level=10, numPlayers=1):
+    def __init__(self, level=10, dimension=False, numPlayers=1):
 
         self.level = level
         self.numPlayers = numPlayers
 
-        self.rows = level*5
-        self.cols = level*5
+        if not dimension:
+            self.rows = level*5
+            self.cols = level*5
+        else:
+            self.rows = dimension[0]
+            self.cols = dimension[1]
+        
         self.completed = False
-
         self.walls = []
-
         self.grid = [[Spot(i, j) for j in range(self.cols)] for i in range(self.rows)]
 
         for i in range(self.rows):
@@ -96,21 +99,39 @@ class Maze():
             self.grid[a.x][a.y].walls[0] = False
             self.grid[b.x][b.y].walls[2] = False
 
-    # def _build_walls(self):
-    #     for i in range(self.cols):
-    #         for j in range(self.rows):
-    #             if self.grid[i][j].walls[0] == True:
-    #                 w = Wall(self.game, i, j, 'h', 'n')
-    #                 self.walls.add(w)
-    #             if self.grid[i][j].walls[1] == True:
-    #                 w = Wall(self.game, i, j, 'v', 'l')
-    #                 self.walls.add(w)
-    #             if self.grid[i][j].walls[2] == True:
-    #                 w = Wall(self.game, i, j, 'h', 's')
-    #                 self.walls.add(w)
-    #             if self.grid[i][j].walls[3] == True:
-    #                 w = Wall(self.game, i, j, 'v', 'o')
-    #                 self.walls.add(w)
+    def build_walls(self):
+        self.dist_x = SCREENWIDTH/self.cols
+        self.dist_y = SCREENWIDTH/self.rows
+        mazeBlock = [self.dist_x, self.dist_y]
+
+
+        for i in range(self.cols):
+            for j in range(self.rows):
+                if self.grid[i][j].walls[0] == True:
+                    position = [i*self.dist_x, j*self.dist_y]
+                    w = Wall(pos=position, size=mazeBlock, orientacao=0)
+                    self.walls.append(w)
+                if self.grid[i][j].walls[1] == True:
+                    position = [i*self.dist_x+self.dist_x, j*self.dist_y]
+                    w = Wall(pos=position, size=mazeBlock, orientacao=1)
+                    self.walls.append(w)
+                if self.grid[i][j].walls[2] == True:
+                    position = [i*self.dist_x+self.dist_x, j*self.dist_y+self.dist_y]
+                    w = Wall(pos=position, size=mazeBlock, orientacao=0)
+                    self.walls.append(w)
+                if self.grid[i][j].walls[3] == True:
+                    position = [i*self.dist_x+self.dist_x, j*self.dist_y+self.dist_y]
+                    w = Wall(pos=position, size=mazeBlock, orientacao=1)
+                    self.walls.append(w)
+
+                # if self.walls[0]:
+                #     pygame.draw.line(screen, color, [self.x*hr, self.y*wr],       [self.x*hr+hr, self.y*wr], 2)
+                # if self.walls[1]:
+                #     pygame.draw.line(screen, color, [self.x*hr+hr, self.y*wr],    [self.x*hr+hr, self.y*wr + wr], 2)
+                # if self.walls[2]:
+                #     pygame.draw.line(screen, color, [self.x*hr+hr, self.y*wr+wr], [self.x*hr, self.y*wr+wr], 2)
+                # if self.walls[3]:
+                #     pygame.draw.line(screen, color, [self.x*hr, self.y*wr+wr],    [self.x*hr, self.y*wr], 2)
 
                                                                    
     #pensar no online

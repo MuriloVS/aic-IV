@@ -1,3 +1,4 @@
+from re import X
 import pygame as pg
 from pathlib import Path
 
@@ -8,29 +9,27 @@ vector = pg.math.Vector2
 
 
 class Wall(pg.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, orientacao, posicao):
+    def __init__(self, pos, size, orientacao=0):
         pg.sprite.Sprite.__init__(self)
 
-        self.x = x*30+50
-        self.y = y*30+100
+        self.x = pos[0]
+        self.y = pos[1]
+        self.size_x = size[0]
+        self.size_y = size[1]/4
+        print(f'pos: ({self.x, self.y}) - size: ({self.size_x, self.size_y})')
 
         path = Path("media", "images", "tv.png")
-        self.image = pg.image.load(path).convert()
-        self.image = pg.Surface()
+        #self.image = pg.image.load(path).convert()
+        self.image = pg.Surface((self.size_x, self.size_y))
+        self.image.fill(RED)
 
-        if orientacao == 'v':
-            self.image = pg.transform.scale(self.image, (50,25))
+        if orientacao == 1:
             self.image = pg.transform.rotate(self.image, 90)
-        else:
-            self.image = pg.transform.scale(self.image, (25,50))
-
-#        if posicao == 'n':
-
 
         self.rect = self.image.get_rect()
-
-        self.rect.midbottom = (self.x, self.y)
+        self.rect.center = (self.x, self.y)
         self.pos = vector(self.rect.midbottom)
 
     def update(self):
         pass
+
