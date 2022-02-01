@@ -1,4 +1,5 @@
 import pygame as pg
+from pathlib import Path
 
 from scenes.menu_inicial import MenuInicial
 from scenes.maze import Maze
@@ -9,9 +10,9 @@ from util.config import *
 
 class Game():
 
-    def __init__(self, window:pg.display):
+    def __init__(self, window: pg.display):
 
-        self.window = window     
+        self.window = window
         self.rect = self.window.get_rect()
         self.rect.center = (SCREENWIDTH, SCREENHEIGHT)
 
@@ -34,7 +35,7 @@ class Game():
             self.event_check()
             self.update()
             self.draw()
-            
+
             pg.display.flip()
 
         pg.quit()
@@ -54,7 +55,7 @@ class Game():
         # desenha todos os objetos na tela
         self.walls.draw(self.window)
         self.players.draw(self.window)
-        #self.window.blit((self.player1.image), (self.player1.rect)) # não necessário
+        # self.window.blit((self.player1.image), (self.player1.rect)) # não necessário
 
     def load_scene(self, scene=MENU_PRINCIPAL, **kwargs):
         self.scene = scene
@@ -86,8 +87,17 @@ class Game():
                 self.walls.add(wall)
             self.players.add(self.player1)
 
+            self.play_music()
+
         elif self.scene == PAUSE:
             pass
 
         elif self.scene == GAME_OVER:
-            pass     
+            pass
+
+    def play_music(self):
+        # podemos passar um parâmetro no método para quando tivermos outras músicas (intro, gameplay)
+        path = Path('media', 'music', 'music_intro.wav')
+        self.intro_music = pg.mixer.Sound(path)
+        self.intro_music.set_volume(0.15)
+        self.intro_music.play(loops=-1)
