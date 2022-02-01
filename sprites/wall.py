@@ -14,9 +14,9 @@ class Wall(pg.sprite.Sprite):
 
         self.x = pos[0]
         self.y = pos[1]
-        self.size_x = size[0]
-        self.size_y = size[1]/4
-        print(f'pos: ({self.x, self.y}) - size: ({self.size_x, self.size_y})')
+        # ajustando dimensões da parede
+        self.size_x = size * 1.25
+        self.size_y = size * 0.25
 
         path = Path("media", "images", "tv.png")
         #self.image = pg.image.load(path).convert()
@@ -28,7 +28,7 @@ class Wall(pg.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
-        self.pos = vector(self.rect.midbottom)
+        self.pos = vector(self.rect.center)
 
     def update(self):
         pass
