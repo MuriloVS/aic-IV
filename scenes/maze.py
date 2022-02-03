@@ -95,25 +95,32 @@ class Maze():
             self.grid[b.x][b.y].walls[2] = False
 
     def build_walls(self):
+        
         self.size = 100
 
         for i in range(self.rows):
             for j in range(self.cols):
-                if self.grid[i][j].walls[0] == True:
+                
+                # parede superior
+                if self.grid[i][j].walls[0] == True and j % 2 == 0:
                     pos = [i*self.size + self.size/2, j*self.size]
                     w = Wall(pos=pos, size=self.size, orientacao=0)
                     self.walls.append(w)
-                if self.grid[i][j].walls[1] == True:
+
+                # parede direita
+                if self.grid[i][j].walls[1] == True and i % 2 == 0:
                     pos = [i*self.size + self.size, j*self.size + self.size/2]
                     w = Wall(pos=pos, size=self.size, orientacao=1)
                     self.walls.append(w)
-                if self.grid[i][j].walls[2] == True:
+
+                # parede inferior
+                if self.grid[i][j].walls[2] == True and j % 2 == 0:
                     pos = [i*self.size + self.size/2, j*self.size+self.size]
                     w = Wall(pos=pos, size=self.size, orientacao=0)
                     self.walls.append(w)
-                if self.grid[i][j].walls[3] == True:
+
+                # parede esquerda
+                if self.grid[i][j].walls[3] == True and i % 2 == 0:
                     pos = [i*self.size, j*self.size+self.size/2]
                     w = Wall(pos=pos, size=self.size, orientacao=1)
                     self.walls.append(w)
-                                                                   
-    #pensar no online
