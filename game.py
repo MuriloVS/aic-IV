@@ -1,5 +1,6 @@
 import pygame as pg
 from pathlib import Path
+from math import ceil
 
 from scenes.menu_inicial import MenuInicial
 from scenes.maze import Maze
@@ -14,7 +15,7 @@ class Game():
 
         self.window = window
         self.rect = self.window.get_rect()
-        self.rect.center = (SCREENWIDTH, SCREENHEIGHT)
+        self.rect.center = (SCREENWIDTH/2, SCREENHEIGHT/2)
 
         pg.display.set_caption(TITLE)
         # pg.mixer.init()
@@ -23,6 +24,10 @@ class Game():
 
         self.players = pg.sprite.Group()
         self.walls = pg.sprite.Group()
+
+        # bússola para controlar posição dos objetos
+        self.x = 0
+        self.y = 0
 
         self.scene = MENU_PRINCIPAL
 
@@ -33,6 +38,7 @@ class Game():
             self.clock.tick(FPS)
 
             self.event_check()
+            self.move_camera()
             self.update()
             self.draw()
 
@@ -46,6 +52,8 @@ class Game():
                 self.run = False
 
     def update(self):
+        #pg.sprite.spritecollide(self.player1, self.walls, True)
+
         self.walls.update()
         self.players.update()
 
@@ -95,9 +103,41 @@ class Game():
         elif self.scene == GAME_OVER:
             pass
 
+    def move_camera(self):
+        # ao atingir os limites inferiores e superiores
+        # a posição dos objetos se reajusta
+
+        # controle da câmera em y
+        move = ceil(abs(self.player1.vel.y))
+        if self.player1.rect.top <= SCREENHEIGHT * (1/3):
+            self.player1.pos.y += move
+            self.y += move
+            for elem in self.walls:
+                elem.rect.y += move
+        elif self.player1.rect.bottom >= SCREENHEIGHT * (2/3):
+            self.player1.pos.y -= move
+            self.y -= move
+            for elem in self.walls:
+                elem.rect.y -= move
+
+        # controle da câmera em x   
+        move = ceil(abs(self.player1.vel.x))
+        if self.player1.rect.left <= SCREENWIDTH * (1/3):
+            self.player1.pos.x += move
+            self.x += move
+            for elem in self.walls:
+                elem.rect.x += move
+
+        elif self.player1.rect.right >= SCREENWIDTH * (2/3):
+            self.player1.pos.x -= move
+            self.x -= move
+            for elem in self.walls:
+                elem.rect.x -= move
+
     def play_music(self):
+        pass
         # podemos passar um parâmetro no método para quando tivermos outras músicas (intro, gameplay)
-        path = Path('media', 'music', 'music_intro.wav')
-        self.intro_music = pg.mixer.Sound(path)
-        self.intro_music.set_volume(0.15)
-        self.intro_music.play(loops=-1)
+        # path = Path('media', 'music', 'music_intro.wav')
+        # self.intro_music = pg.mixer.Sound(path)
+        # self.intro_music.set_volume(0.15)
+        # self.intro_music.play(loops=-1)

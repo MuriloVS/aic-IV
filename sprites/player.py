@@ -22,6 +22,8 @@ class Player(pg.sprite.Sprite):
         self.x = pos_x
         self.y = pos_y
 
+        self.walking = False
+
     def update(self):
         self.acc = vector(0, 0)
         key = pg.key.get_pressed()
@@ -44,5 +46,19 @@ class Player(pg.sprite.Sprite):
         self.vel.y += self.acc.y
         self.pos.y += self.vel.y + 0.5 * self.acc.y
 
+        self.walking = True
+
+        # condition to stop (to print standing_frames)
+        if abs(self.vel.x) <= 1:
+            self.vel.x = 0
+            self.acc.y = 0
+            self.walking = False
+        if abs(self.vel.y) <= 1:
+            self.vel.y = 0
+            self.acc.y = 0
+            self.walking = False  
+
         # atualização da posição
-        self.rect.midbottom = self.pos
+        self.rect.center = self.pos    
+
+
