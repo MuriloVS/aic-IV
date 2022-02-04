@@ -1,5 +1,6 @@
 import pygame as pg
 from pathlib import Path
+from math import ceil
 
 from util.config import *
 
@@ -23,6 +24,7 @@ class Player(pg.sprite.Sprite):
         self.y = pos_y
 
         self.walking = False
+        self.collides = []
 
     def update(self):
         self.acc = vector(0, 0)
@@ -39,14 +41,42 @@ class Player(pg.sprite.Sprite):
             self.acc.y = -PLAYER_ACC
 
         # atrito
-        self.acc.x += self.vel.x * PLAYER_FRICTION
-        self.vel.x += self.acc.x
-        self.pos.x += self.vel.x + 0.5 * self.acc.x
-        self.acc.y += self.vel.y * PLAYER_FRICTION
-        self.vel.y += self.acc.y
-        self.pos.y += self.vel.y + 0.5 * self.acc.y
+        tolerance = 10
+        print(self.vel.x, self.vel.y)
+        if self.collides:
+            for collide in self.collides:
+                if (abs(self.rect.top - collide.rect.bottom) < tolerance and self.acc.y < 0):
+                    self.acc.y = 0
+                    self.vel.y = 0                 
+                if (abs(self.rect.bottom - collide.rect.top) < tolerance and self.acc.y > 0):
+                    self.acc.y = 0
+                    self.vel.y = 0
+                if (abs(self.rect.right - collide.rect.left) < tolerance and self.acc.x > 0):
+                    self.acc.x = 0
+                    self.vel.x = 0                    
+                if (abs(self.rect.left - collide.rect.right) < tolerance and self.acc.x < 0):
+                    self.acc.x = 0
+                    self.vel.x = 0                     
+                else:
+                    if self.acc.x != 0:
+                        self.acc.x += self.vel.x * PLAYER_FRICTION
+                        self.vel.x += self.acc.x
+                        self.pos.x += self.vel.x + 0.5 * self.acc.x
+                    if self.acc.y != 0:
+                        self.acc.y += self.vel.y * PLAYER_FRICTION
+                        self.vel.y += self.acc.y
+                        self.pos.y += self.vel.y + 0.5 * self.acc.y                        
 
-        self.walking = True
+        else:
+            self.acc.x += self.vel.x * PLAYER_FRICTION
+            self.vel.x += self.acc.x
+            self.pos.x += self.vel.x + 0.5 * self.acc.x
+
+            self.acc.y += self.vel.y * PLAYER_FRICTION
+            self.vel.y += self.acc.y
+            self.pos.y += self.vel.y + 0.5 * self.acc.y
+
+            self.walking = True
 
         # condition to stop (to print standing_frames)
         if abs(self.vel.x) <= 1:
