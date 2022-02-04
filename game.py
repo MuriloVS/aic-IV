@@ -52,13 +52,13 @@ class Game():
                 self.run = False
 
     def update(self):
-        #pg.sprite.spritecollide(self.player1, self.walls, True)
-
         self.walls.update()
         self.players.update()
 
+        self.player1.collides = pg.sprite.spritecollide(self.player1, self.walls, False)
+
     def draw(self):
-        self.window.fill(BLACK)
+        self.window.fill(WHITE)
 
         # desenha todos os objetos na tela
         self.walls.draw(self.window)
