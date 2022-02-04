@@ -1,5 +1,10 @@
+from operator import pos
+from itsdangerous import json
 import pygame as pg
 from pathlib import Path
+import socket
+import threading
+import pickle
 
 from util.config import *
 
@@ -8,7 +13,7 @@ vector = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, pos_x, pos_y, single_player=False):
         pg.sprite.Sprite.__init__(self)
 
         path = Path("media", "images", "tv.png")
@@ -23,6 +28,15 @@ class Player(pg.sprite.Sprite):
         self.y = pos_y
 
         self.walking = False
+
+        self.single_player = single_player
+
+        if not self.single_player:
+            self.client_socket = socket.socket(
+                socket.AF_INET, socket.SOCK_STREAM)
+            self.client_socket.connect((LOCALHOST, PORT))
+            self.update_thread = threading.Thread(target=self.update)
+            self.update_thread.start()
 
     def update(self):
         self.acc = vector(0, 0)
@@ -56,9 +70,14 @@ class Player(pg.sprite.Sprite):
         if abs(self.vel.y) <= 1:
             self.vel.y = 0
             self.acc.y = 0
-            self.walking = False  
+            self.walking = False
 
         # atualização da posição
-        self.rect.center = self.pos    
+        self.rect.center = self.pos
 
-
+        if not self.single_player:
+            self.server_message = self.client_socket.recv(4096)
+            if self.server_message.decode('utf-8') == 'POS':
+                position = {'x': self.pos.x, 'y': self.pos.y}
+                self.client_socket.send(pickle.dumps(position))
+                self.single_player = True
