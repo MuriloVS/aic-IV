@@ -14,15 +14,16 @@ def broadcast(message):
         client.send(message)
 
 
-def client_handler(client):
+def client_handler(client, current_player):
     while True:
         try:
             # recebe a mensagem enviada por um cliente
-            message = client.recv(4096)
-            data = pickle.loads(message)
-            broadcast(data)
+            # client.send('POS'.encode('utf-8'))
+            message = pickle.loads(client.recv(1024))
+            print(f'Player {current_player} - position {message}')
         except:
             # removendo o cliente das listas
+            print('Cliente de desconectou.')
             index = clients.index(client)
             clients.pop(index)
 
@@ -32,6 +33,7 @@ def client_handler(client):
 
 
 def receive(server):
+    current_player = 0
     while True:
         try:
             # accept inicia a conexão com o servidor
@@ -39,14 +41,17 @@ def receive(server):
             client, address = server.accept()
             clients.append(client)
 
-            client.send('POS'.encode('utf-8'))
-            message = pickle.loads(client.recv(4096))
-            print(f'{message} se conectou')
+            # client.send('POS'.encode('utf-8'))
+            # message = pickle.loads(client.recv(1024))
+            # print(f'{message}')
 
             # feita a conexão com o cliente iniciamos uma thread para
             # lidar com esta conexão
-            thread = threading.Thread(target=client_handler, args=(client,))
+            thread = threading.Thread(
+                target=client_handler, args=(client, current_player))
             thread.start()
+
+            current_player += 1
         except:
             exit(0)
 

@@ -1,5 +1,3 @@
-from operator import pos
-from itsdangerous import json
 import pygame as pg
 from pathlib import Path
 import socket
@@ -35,7 +33,7 @@ class Player(pg.sprite.Sprite):
             self.client_socket = socket.socket(
                 socket.AF_INET, socket.SOCK_STREAM)
             self.client_socket.connect((LOCALHOST, PORT))
-            self.update_thread = threading.Thread(target=self.update)
+            self.update_thread = threading.Thread(target=self.send_position)
             self.update_thread.start()
 
     def update(self):
@@ -45,12 +43,20 @@ class Player(pg.sprite.Sprite):
         # movimento
         if key[pg.K_LEFT]:
             self.acc.x = -PLAYER_ACC
+            if not self.single_player:
+                self.send_position()
         if key[pg.K_RIGHT]:
             self.acc.x = PLAYER_ACC
+            if not self.single_player:
+                self.send_position()
         if key[pg.K_DOWN]:
             self.acc.y = PLAYER_ACC
+            if not self.single_player:
+                self.send_position()
         if key[pg.K_UP]:
             self.acc.y = -PLAYER_ACC
+            if not self.single_player:
+                self.send_position()
 
         # atrito
         self.acc.x += self.vel.x * PLAYER_FRICTION
@@ -75,9 +81,6 @@ class Player(pg.sprite.Sprite):
         # atualização da posição
         self.rect.center = self.pos
 
-        if not self.single_player:
-            self.server_message = self.client_socket.recv(4096)
-            if self.server_message.decode('utf-8') == 'POS':
-                position = {'x': self.pos.x, 'y': self.pos.y}
-                self.client_socket.send(pickle.dumps(position))
-                self.single_player = True
+    def send_position(self):       
+        position = {'x': self.pos.x, 'y': self.pos.y}
+        self.client_socket.send(pickle.dumps(position))
