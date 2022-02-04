@@ -1,68 +1,70 @@
+from cmath import pi
 import socket
 import threading
 import pickle
-from player import Player
 
-players = [Player(0, 0, 50, 50, (255, 0, 0)),
-           Player(100, 100, 50, 50, (0, 0, 255))]
-current_player = 0
+LOCALHOST = '127.0.0.1'
+PORT = 6789
 
-server = "192.168.56.1"
-port = 5555
+clients = []
 
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-try:
-    s.bind((server, port))
-except socket.error as e:
-    print(e)
-
-# no máximo dois jogadores podem se conectar ao servidor
-s.listen(2)
-print('Esperando conexão. Sever funcionando.')
+def broadcast(message):
+    for client in clients:
+        client.send(message)
 
 
-def threaded_client(conn, current_player):
-    conn.send(pickle.dumps(players[current_player]))
-    reply = ""
-
+def client_handler(client):
     while True:
         try:
-            data = pickle.loads(conn.recv(2048))
-            players[current_player] = data
-
-            if not data:
-                print('Disconnected')
-                break
-            else:
-                if current_player == 1:
-                    reply = players[0]
-                else:
-                    reply = players[1]
-
-                # print(f'Received: {data}')
-                # print(f'Sending: {reply}')
-
-            conn.sendall(pickle.dumps(reply))
+            # recebe a mensagem enviada por um cliente
+            message = client.recv(4096)
+            data = pickle.loads(message)
+            broadcast(data)
         except:
+            # removendo o cliente das listas
+            index = clients.index(client)
+            clients.pop(index)
+
+            # e finalizando a conexão
+            client.close()
             break
 
-    print('Lost connection.')
-    print(current_player)
-    conn.close()
 
-
-def main(current_player):
+def receive(server):
     while True:
-        conn, addr = s.accept()
-        print(f'Connected to: {addr}')
+        try:
+            # accept inicia a conexão com o servidor
+            # retornando dados do cliente e endereço/porta usados
+            client, address = server.accept()
+            clients.append(client)
 
-        t = threading.Thread(target=threaded_client,
-                             args=(conn, current_player))
-        t.start()
-        current_player += 1
+            client.send('POS'.encode('utf-8'))
+            message = pickle.loads(client.recv(4096))
+            print(f'{message} se conectou')
+
+            # feita a conexão com o cliente iniciamos uma thread para
+            # lidar com esta conexão
+            thread = threading.Thread(target=client_handler, args=(client,))
+            thread.start()
+        except:
+            exit(0)
+
+
+def create_server():
+    # AF_INET se refere ao IPV4 e o SOCK_STREAM ao protocolo TCP
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # o bind vincula o servidor ao endereço e porta fornecidos
+    server.bind((LOCALHOST, PORT))
+    # listen para esperar as conexões - limitadas a 15
+    # no caso de uma hipotética 16ª conexão esta seria rejeitada
+    server.listen(15)
+    print(f'Servidor rodando em {LOCALHOST} na porta {PORT}')
+    return server
 
 
 if __name__ == '__main__':
-    main(current_player)
+    # cria o servidor
+    server = create_server()
+    # e espera as conexões
+    receive(server)
