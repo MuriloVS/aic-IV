@@ -59,7 +59,12 @@ class Player(pg.sprite.Sprite):
             if not self.single_player:
                 self.send_position()
 
-        # atrito
+        self.acc.x += self.vel.x * PLAYER_FRICTION
+        self.vel.x += self.acc.x
+
+        self.acc.y += self.vel.y * PLAYER_FRICTION
+        self.vel.y += self.acc.y
+
         tolerance = 10
         print(self.vel.x, self.vel.y)
         if self.collides:
@@ -75,27 +80,14 @@ class Player(pg.sprite.Sprite):
                     self.vel.x = 0                    
                 if (abs(self.rect.left - collide.rect.right) < tolerance and self.acc.x < 0):
                     self.acc.x = 0
-                    self.vel.x = 0                     
-                else:
-                    if self.acc.x != 0:
-                        self.acc.x += self.vel.x * PLAYER_FRICTION
-                        self.vel.x += self.acc.x
-                        self.pos.x += self.vel.x + 0.5 * self.acc.x
-                    if self.acc.y != 0:
-                        self.acc.y += self.vel.y * PLAYER_FRICTION
-                        self.vel.y += self.acc.y
-                        self.pos.y += self.vel.y + 0.5 * self.acc.y                        
-
-        else:
-            self.acc.x += self.vel.x * PLAYER_FRICTION
-            self.vel.x += self.acc.x
+                    self.vel.x = 0     
+                                                         
+        if self.vel.x and self.acc.x:
             self.pos.x += self.vel.x + 0.5 * self.acc.x
-
-            self.acc.y += self.vel.y * PLAYER_FRICTION
-            self.vel.y += self.acc.y
+        if self.vel.y and self.acc.y:
             self.pos.y += self.vel.y + 0.5 * self.acc.y
 
-            self.walking = True
+        self.walking = True
 
         # condition to stop (to print standing_frames)
         if abs(self.vel.x) <= 1:
