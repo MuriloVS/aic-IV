@@ -1,12 +1,9 @@
 import pygame as pg
 from pathlib import Path
 import socket
-import threading
 import pickle
-from math import ceil
 
 from util.config import *
-
 
 vector = pg.math.Vector2
 
