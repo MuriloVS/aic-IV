@@ -56,7 +56,7 @@ class Game():
         self.players.update(self.walls)
 
     def draw(self):
-        self.window.fill(WHITE)
+        self.window.fill((150,200,145))
 
         # desenha todos os objetos na tela
         self.walls.draw(self.window)

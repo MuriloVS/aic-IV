@@ -21,7 +21,7 @@ class Wall(pg.sprite.Sprite):
         path = Path("media", "images", "tv.png")
         #self.image = pg.image.load(path).convert()
         self.image = pg.Surface((self.size_x, self.size_y))
-        self.image.fill(RED)
+        self.image.fill((45,45,45))
 
         if orientacao == 1:
             self.image = pg.transform.rotate(self.image, 90)
