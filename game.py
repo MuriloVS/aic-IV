@@ -28,12 +28,13 @@ class Game():
         self.x = 0
         self.y = 0
 
-        self.scene = MENU_PRINCIPAL
+        self.menu_incial = MenuInicial(self)
+        self.run = True
+        self.play = False
 
     def loop(self):
 
-        self.run = True
-        while self.run:
+        while self.play:
             self.clock.tick(FPS)
 
             self.event_check()
@@ -49,6 +50,7 @@ class Game():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.run = False
+                self.play = False
 
     def update(self):
         self.walls.update()
@@ -69,7 +71,7 @@ class Game():
         self.players.empty()
 
         if self.scene == MENU_PRINCIPAL:
-            pass
+            self.menu_incial.loop()
 
         elif self.scene == LOBBY:
             pass
