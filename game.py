@@ -31,14 +31,14 @@ class Game():
         self.x = 0
         self.y = 0
 
-        #<<<<<<< maze
+        # <<<<<<< maze
         #self.scene = MENU_PRINCIPAL
         self.walls_list = []
-        #=======
+        # =======
         self.menu_incial = MenuInicial(self)
         self.run = True
         self.play = False
-        #>>>>>>> main
+        # >>>>>>> main
 
     def loop(self):
         self.play = True
@@ -63,25 +63,26 @@ class Game():
     def update(self):
         self.walls.update()
 
-        #<<<<<<< maze
-        #self.player.collides = pg.sprite.spritecollide(
+        # <<<<<<< maze
+        # self.player.collides = pg.sprite.spritecollide(
         #    self.player, self.walls, False)
-        #=======
+        # =======
         self.players.update(self.walls)
-        #>>>>>>> main
+        # >>>>>>> main
 
     def draw(self):
-        self.window.fill((150,200,145))
+        self.window.fill((150, 200, 145))
 
         # desenha todos os objetos na tela
         self.walls.draw(self.window)
-        #<<<<<<< maze
-        #self.players.draw(self.window)
+        # <<<<<<< maze
+        # self.players.draw(self.window)
         # self.window.blit((self.player.image), (self.player.rect)) # não necessário
-        #=======
-        #self.players.draw(self.window)
-        self.window.blit((self.player1.image), (self.player1.rect)) # não necessário
-        #>>>>>>> main
+        # =======
+        # self.players.draw(self.window)
+        self.window.blit((self.player.image),
+                         (self.player.rect))  # não necessário
+        # >>>>>>> main
 
     def load_scene(self, scene=MENU_PRINCIPAL, **kwargs):
         self.scene = scene
@@ -105,7 +106,7 @@ class Game():
             self.game_socket.send(pickle.dumps(message))
             player = pickle.loads(self.game_socket.recv(2048))
 
-            #<<<<<<< maze
+            # <<<<<<< maze
             # # solicitando o labirinto ao servidor
             message = {'msg_id': 'load_maze'}
             self.game_socket.send(pickle.dumps(message))
@@ -118,10 +119,10 @@ class Game():
                 self.player = Player(QUARTERSCREEN_X, QUARTERSCREEN_Y)
 
             self.players.add(self.player)
-            #=======
+            # =======
             #self.player1 = Player(SCREENWIDTH/2+100, SCREENHEIGHT/2)
             #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
-            #>>>>>>> main
+            # >>>>>>> main
 
             # adicionando sprites aos grupos
             for wall in self.maze:
