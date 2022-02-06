@@ -9,6 +9,7 @@ FPS = 30
 # conexão
 LOCALHOST = '127.0.0.1'
 PORT = 6789
+HEADER = 2048
 
 # tamanho da tela
 SCREENWIDTH = 1200

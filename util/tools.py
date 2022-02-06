@@ -1,6 +1,6 @@
 import pygame as pg
 
-
+from scenes.maze import Maze
 from sprites.wall import Wall
 from util.config import FPS
 
@@ -14,6 +14,17 @@ def wait_for_key() -> bool:
                 if event.key == pg.K_RETURN:
                     return True
 
+def generate_maze():
+    maze = Maze()
+    maze.build()
+    maze_list = []
+
+    for i in range(maze.rows):
+        maze_list.append([])
+        for j in range(maze.cols):
+            maze_list[i].append(maze.grid[i][j].__dict__['walls'])
+
+    return maze_list
 
 def build_walls(maze_list):
 
