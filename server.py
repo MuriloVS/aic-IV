@@ -43,6 +43,9 @@ def client_handler(client, current_player):
 
             elif message['msg_id'] == 'load_maze':
                 client.sendall(pickle.dumps(maze))
+        except KeyboardInterrupt:
+            client.close()
+            break
 
         except:
             # removendo o cliente das listas
@@ -72,6 +75,12 @@ def receive(server):
             thread.start()
 
             current_player += 1
+        except KeyboardInterrupt:
+            print('aqui')
+            for c in clients:
+                c.close()
+            server.close()
+            break
         except:
             exit(0)
 

@@ -12,7 +12,7 @@ vector = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, single_player=False):
+    def __init__(self, pos_x, pos_y, single_player=True):
         pg.sprite.Sprite.__init__(self)
 
         path = Path("media", "images", "tv.png")
@@ -58,7 +58,6 @@ class Player(pg.sprite.Sprite):
             if not self.single_player:
                 self.send_position()
 
-
         # equações para movimento
         acc_x = self.vel.x * PLAYER_FRICTION
         self.acc.x += acc_x
@@ -74,7 +73,7 @@ class Player(pg.sprite.Sprite):
         pos_y = self.vel.y + 0.5 * self.acc.y
         self.pos.y += pos_y
 
-        self.rect.center = self.pos  
+        self.rect.center = self.pos
         self.walking = True
 
         collides = pg.sprite.spritecollide(self, walls, False)
@@ -93,23 +92,22 @@ class Player(pg.sprite.Sprite):
                 if dist_t <= tolerance and self.acc.y < 0 and not collide_t:
                     collide_t = True
                     self.pos.y -= pos_y
-                    self.vel.y = 0           
+                    self.vel.y = 0
                 elif dist_b <= tolerance and self.acc.y > 0 and not collide_b:
                     collide_b = True
                     self.pos.y -= pos_y
-                    self.vel.y = 0 
-                
+                    self.vel.y = 0
+
                 dist_l = abs(self.rect.left - collide.rect.right)
                 dist_r = abs(self.rect.right - collide.rect.left)
                 if dist_l <= tolerance and self.acc.x < 0 and not collide_l:
                     collide_l = True
                     self.pos.x -= pos_x
-                    self.vel.x = 0       
+                    self.vel.x = 0
                 elif dist_r <= tolerance and self.acc.x > 0 and not collide_r:
                     collide_r = True
                     self.pos.x -= pos_x
-                    self.vel.x = 0    
-
+                    self.vel.x = 0
 
         # condition to stop (to print standing_frames)
         if abs(self.vel.x) <= 1:
@@ -122,7 +120,7 @@ class Player(pg.sprite.Sprite):
             self.walking = False
 
         if self.pos != self.rect.center:
-            self.rect.center = self.pos     
+            self.rect.center = self.pos
 
     def send_position(self):
         message = {'msg_id': 'player_position',
