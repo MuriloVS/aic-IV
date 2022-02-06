@@ -11,6 +11,7 @@ from sprites.wall import Wall
 
 from util.config import *
 
+vector = pg.math.Vector2
 
 class Game():
 
@@ -28,17 +29,15 @@ class Game():
         self.walls = pg.sprite.Group()
 
         # bússola para controlar posição dos objetos
-        self.x = 0
-        self.y = 0
+        self.compass = vector(0, 0)
 
-        # <<<<<<< maze
-        #self.scene = MENU_PRINCIPAL
         self.walls_list = []
-        # =======
+
         self.menu_incial = MenuInicial(self)
+
         self.run = True
         self.play = False
-        # >>>>>>> main
+
 
     def loop(self):
         self.play = True
@@ -147,12 +146,12 @@ class Game():
         move = ceil(abs(self.player.vel.y))
         if self.player.rect.top <= SCREENHEIGHT * (1/3):
             self.player.pos.y += move
-            self.y += move
+            self.compass.y += move
             for elem in self.walls:
                 elem.rect.y += move
         elif self.player.rect.bottom >= SCREENHEIGHT * (2/3):
             self.player.pos.y -= move
-            self.y -= move
+            self.compass.y -= move
             for elem in self.walls:
                 elem.rect.y -= move
 
@@ -160,13 +159,13 @@ class Game():
         move = ceil(abs(self.player.vel.x))
         if self.player.rect.left <= SCREENWIDTH * (1/3):
             self.player.pos.x += move
-            self.x += move
+            self.compass.x += move
             for elem in self.walls:
                 elem.rect.x += move
 
         elif self.player.rect.right >= SCREENWIDTH * (2/3):
             self.player.pos.x -= move
-            self.x -= move
+            self.compass.x -= move
             for elem in self.walls:
                 elem.rect.x -= move
 
