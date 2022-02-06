@@ -18,7 +18,6 @@ class Game():
         self.rect.center = (SCREENWIDTH/2, SCREENHEIGHT/2)
 
         pg.display.set_caption(TITLE)
-        # pg.mixer.init()
 
         self.clock = pg.time.Clock()
 
@@ -38,8 +37,8 @@ class Game():
             self.clock.tick(FPS)
 
             self.event_check()
-            self.move_camera()
             self.update()
+            self.move_camera()
             self.draw()
 
             pg.display.flip()
@@ -53,17 +52,16 @@ class Game():
 
     def update(self):
         self.walls.update()
-        self.players.update()
 
-        self.player1.collides = pg.sprite.spritecollide(self.player1, self.walls, False)
+        self.players.update(self.walls)
 
     def draw(self):
         self.window.fill(WHITE)
 
         # desenha todos os objetos na tela
         self.walls.draw(self.window)
-        self.players.draw(self.window)
-        # self.window.blit((self.player1.image), (self.player1.rect)) # não necessário
+        #self.players.draw(self.window)
+        self.window.blit((self.player1.image), (self.player1.rect)) # não necessário
 
     def load_scene(self, scene=MENU_PRINCIPAL, **kwargs):
         self.scene = scene
@@ -87,7 +85,7 @@ class Game():
             self.maze.build_walls()
             #x, y = self.maze.get_player_position()
 
-            self.player1 = Player(SCREENWIDTH/2, SCREENHEIGHT/2)
+            self.player1 = Player(SCREENWIDTH/2+100, SCREENHEIGHT/2)
             #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
 
             # adicionando sprites aos grupos

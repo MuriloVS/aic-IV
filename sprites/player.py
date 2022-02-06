@@ -3,6 +3,7 @@ from pathlib import Path
 import socket
 import threading
 import pickle
+from math import ceil
 
 from util.config import *
 
@@ -26,7 +27,6 @@ class Player(pg.sprite.Sprite):
         self.y = pos_y
 
         self.walking = False
-        self.collides = []
 
         self.single_player = single_player
 
@@ -37,7 +37,7 @@ class Player(pg.sprite.Sprite):
             self.update_thread = threading.Thread(target=self.send_position)
             self.update_thread.start()
 
-    def update(self):
+    def update(self, walls):
         self.acc = vector(0, 0)
         key = pg.key.get_pressed()
 
@@ -59,35 +59,56 @@ class Player(pg.sprite.Sprite):
             if not self.single_player:
                 self.send_position()
 
-        self.acc.x += self.vel.x * PLAYER_FRICTION
-        self.vel.x += self.acc.x
+        # equações para movimento
+        acc_x = self.vel.x * PLAYER_FRICTION
+        self.acc.x += acc_x
+        vel_x = self.acc.x
+        self.vel.x += vel_x
+        pos_x = self.vel.x + 0.5 * self.acc.x
+        self.pos.x += pos_x
 
-        self.acc.y += self.vel.y * PLAYER_FRICTION
-        self.vel.y += self.acc.y
+        acc_y = self.vel.y * PLAYER_FRICTION
+        self.acc.y += acc_y
+        vel_y = self.acc.y
+        self.vel.y += vel_y
+        pos_y = self.vel.y + 0.5 * self.acc.y
+        self.pos.y += pos_y
 
-        tolerance = 10
-        print(self.vel.x, self.vel.y)
-        if self.collides:
-            for collide in self.collides:
-                if (abs(self.rect.top - collide.rect.bottom) < tolerance and self.acc.y < 0):
-                    self.acc.y = 0
-                    self.vel.y = 0                 
-                if (abs(self.rect.bottom - collide.rect.top) < tolerance and self.acc.y > 0):
-                    self.acc.y = 0
-                    self.vel.y = 0
-                if (abs(self.rect.right - collide.rect.left) < tolerance and self.acc.x > 0):
-                    self.acc.x = 0
-                    self.vel.x = 0                    
-                if (abs(self.rect.left - collide.rect.right) < tolerance and self.acc.x < 0):
-                    self.acc.x = 0
-                    self.vel.x = 0     
-                                                         
-        if self.vel.x and self.acc.x:
-            self.pos.x += self.vel.x + 0.5 * self.acc.x
-        if self.vel.y and self.acc.y:
-            self.pos.y += self.vel.y + 0.5 * self.acc.y
-
+        self.rect.center = self.pos  
         self.walking = True
+
+        collides = pg.sprite.spritecollide(self, walls, False)
+
+        if collides:
+            tolerance = 10
+            collide_t = False
+            collide_b = False
+            collide_r = False
+            collide_l = False
+
+            for collide in collides:
+
+                dist_t = abs(self.rect.top - collide.rect.bottom)
+                dist_b = abs(self.rect.bottom - collide.rect.top)
+                if dist_t <= tolerance and self.acc.y < 0 and not collide_t:
+                    collide_t = True
+                    self.pos.y -= pos_y
+                    self.vel.y = 0           
+                elif dist_b <= tolerance and self.acc.y > 0 and not collide_b:
+                    collide_b = True
+                    self.pos.y -= pos_y
+                    self.vel.y = 0 
+                
+                dist_l = abs(self.rect.left - collide.rect.right)
+                dist_r = abs(self.rect.right - collide.rect.left)
+                if dist_l <= tolerance and self.acc.x < 0 and not collide_l:
+                    collide_l = True
+                    self.pos.x -= pos_x
+                    self.vel.x = 0       
+                elif dist_r <= tolerance and self.acc.x > 0 and not collide_r:
+                    collide_r = True
+                    self.pos.x -= pos_x
+                    self.vel.x = 0    
 
         # condition to stop (to print standing_frames)
         if abs(self.vel.x) <= 1:
@@ -99,8 +120,8 @@ class Player(pg.sprite.Sprite):
             self.acc.y = 0
             self.walking = False
 
-        # atualização da posição
-        self.rect.center = self.pos
+        if self.pos != self.rect.center:
+            self.rect.center = self.pos     
 
     def send_position(self):       
         position = {'x': self.pos.x, 'y': self.pos.y}
