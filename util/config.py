@@ -6,13 +6,15 @@ import pygame as pg
 TITLE = 'A Maze'
 FPS = 30
 
-# tamanho da tela inteira
+# conexão
+LOCALHOST = '127.0.0.1'
+PORT = 6789
+
+# tamanho da tela
 SCREENWIDTH = 1200
 SCREENHEIGHT = 700
 
 # player property
-# PLAYER_ACC = 5
-# PLAYER_FRICTION = -1
 PLAYER_ACC = 2
 PLAYER_FRICTION = -0.4
 
@@ -44,3 +46,4 @@ EBONY = (33, 36, 31)
 # conexão
 LOCALHOST = '127.0.0.1'
 PORT = 6789
+

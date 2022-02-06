@@ -21,7 +21,6 @@ class Game():
         self.rect.center = (SCREENWIDTH/2, SCREENHEIGHT/2)
 
         pg.display.set_caption(TITLE)
-        # pg.mixer.init()
 
         self.clock = pg.time.Clock()
 
@@ -32,18 +31,23 @@ class Game():
         self.x = 0
         self.y = 0
 
-        self.scene = MENU_PRINCIPAL
+        #<<<<<<< maze
+        #self.scene = MENU_PRINCIPAL
         self.walls_list = []
+        #=======
+        self.menu_incial = MenuInicial(self)
+        self.run = True
+        self.play = False
+        #>>>>>>> main
 
     def loop(self):
-
-        self.run = True
-        while self.run:
+        self.play = True
+        while self.play:
             self.clock.tick(FPS)
 
             self.event_check()
-            self.move_camera()
             self.update()
+            self.move_camera()
             self.draw()
 
             pg.display.flip()
@@ -54,21 +58,30 @@ class Game():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.run = False
+                self.play = False
 
     def update(self):
         self.walls.update()
-        self.players.update()
 
-        self.player.collides = pg.sprite.spritecollide(
-            self.player, self.walls, False)
+        #<<<<<<< maze
+        #self.player.collides = pg.sprite.spritecollide(
+        #    self.player, self.walls, False)
+        #=======
+        self.players.update(self.walls)
+        #>>>>>>> main
 
     def draw(self):
-        self.window.fill(WHITE)
+        self.window.fill((150,200,145))
 
         # desenha todos os objetos na tela
         self.walls.draw(self.window)
-        self.players.draw(self.window)
+        #<<<<<<< maze
+        #self.players.draw(self.window)
         # self.window.blit((self.player.image), (self.player.rect)) # não necessário
+        #=======
+        #self.players.draw(self.window)
+        self.window.blit((self.player1.image), (self.player1.rect)) # não necessário
+        #>>>>>>> main
 
     def load_scene(self, scene=MENU_PRINCIPAL, **kwargs):
         self.scene = scene
@@ -76,7 +89,7 @@ class Game():
         self.players.empty()
 
         if self.scene == MENU_PRINCIPAL:
-            pass
+            self.menu_incial.loop()
 
         elif self.scene == LOBBY:
             pass
@@ -92,6 +105,7 @@ class Game():
             self.game_socket.send(pickle.dumps(message))
             player = pickle.loads(self.game_socket.recv(2048))
 
+            #<<<<<<< maze
             # # solicitando o labirinto ao servidor
             message = {'msg_id': 'load_maze'}
             self.game_socket.send(pickle.dumps(message))
@@ -104,6 +118,10 @@ class Game():
                 self.player = Player(QUARTERSCREEN_X, QUARTERSCREEN_Y)
 
             self.players.add(self.player)
+            #=======
+            #self.player1 = Player(SCREENWIDTH/2+100, SCREENHEIGHT/2)
+            #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
+            #>>>>>>> main
 
             # adicionando sprites aos grupos
             for wall in self.maze:
