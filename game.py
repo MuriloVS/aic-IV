@@ -33,7 +33,7 @@ class Game():
         self.play = False
 
     def loop(self):
-
+        self.play = True
         while self.play:
             self.clock.tick(FPS)
 

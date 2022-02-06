@@ -6,6 +6,7 @@ class Menu():
     def __init__(self, game):
         self.game = game
         self.run_display = True
+        self.mid_w, self.mid_h = SCREENWIDTH / 2, SCREENHEIGHT / 2
         self.cursor_rect = pg.Rect(0, 0, 20, 20)
         self.offset = - 100
 
@@ -21,7 +22,7 @@ class MenuInicial(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
         self.state = "Start"
-        self.startx, self.starty = SCREENWIDTH*(), SCREENHEIGHT + 30
+        self.startx, self.starty = SCREENWIDTH/2, SCREENHEIGHT + 30
         self.optionsx, self.optionsy = self.mid_w, self.mid_h + 50
         self.creditsx, self.creditsy = self.mid_w, self.mid_h + 70
         self.cursor_rect.midtop = (self.startx + self.offset, self.starty)

@@ -13,6 +13,6 @@ if __name__ == '__main__':
     
 
     g = Game(window)
-    g.load_scene(MENU_PRINCIPAL)
-    # g.load_scene(MAZE, level=5)
-    # g.loop()
+    # g.load_scene(MENU_PRINCIPAL)
+    g.load_scene(MAZE, level=5)
+    g.loop()
