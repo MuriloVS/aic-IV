@@ -11,14 +11,14 @@ vector = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, single_player=True):
+    def __init__(self, pos_x, pos_y, single_player=False):
         pg.sprite.Sprite.__init__(self)
 
         path = Path("media", "images", "tv.png")
         self.image = pg.image.load(path).convert()
         self.rect = self.image.get_rect()
 
-        self.rect.midbottom = (SCREENWIDTH/2, SCREENHEIGHT/2)
+        self.rect.midbottom = (pos_x, pos_y)
         self.pos = vector(self.rect.midbottom)
         self.vel = vector(0, 0)
         self.acc = vector(0, 0)
@@ -34,8 +34,7 @@ class Player(pg.sprite.Sprite):
             self.client_socket = socket.socket(
                 socket.AF_INET, socket.SOCK_STREAM)
             self.client_socket.connect((LOCALHOST, PORT))
-            self.update_thread = threading.Thread(target=self.send_position)
-            self.update_thread.start()
+            self.send_position()
 
     def update(self):
         self.acc = vector(0, 0)
@@ -61,21 +60,21 @@ class Player(pg.sprite.Sprite):
 
         # atrito
         tolerance = 10
-        print(self.vel.x, self.vel.y)
+        #print(self.vel.x, self.vel.y)
         if self.collides:
             for collide in self.collides:
                 if (abs(self.rect.top - collide.rect.bottom) < tolerance and self.acc.y < 0):
                     self.acc.y = 0
-                    self.vel.y = 0                 
+                    self.vel.y = 0
                 if (abs(self.rect.bottom - collide.rect.top) < tolerance and self.acc.y > 0):
                     self.acc.y = 0
                     self.vel.y = 0
                 if (abs(self.rect.right - collide.rect.left) < tolerance and self.acc.x > 0):
                     self.acc.x = 0
-                    self.vel.x = 0                    
+                    self.vel.x = 0
                 if (abs(self.rect.left - collide.rect.right) < tolerance and self.acc.x < 0):
                     self.acc.x = 0
-                    self.vel.x = 0                     
+                    self.vel.x = 0
                 else:
                     if self.acc.x != 0:
                         self.acc.x += self.vel.x * PLAYER_FRICTION
@@ -84,7 +83,7 @@ class Player(pg.sprite.Sprite):
                     if self.acc.y != 0:
                         self.acc.y += self.vel.y * PLAYER_FRICTION
                         self.vel.y += self.acc.y
-                        self.pos.y += self.vel.y + 0.5 * self.acc.y                        
+                        self.pos.y += self.vel.y + 0.5 * self.acc.y
 
         else:
             self.acc.x += self.vel.x * PLAYER_FRICTION
@@ -110,6 +109,11 @@ class Player(pg.sprite.Sprite):
         # atualização da posição
         self.rect.center = self.pos
 
-    def send_position(self):       
-        position = {'x': self.pos.x, 'y': self.pos.y}
-        self.client_socket.send(pickle.dumps(position))
+    def send_position(self):
+        message = {'msg_id': 'player_position',
+                   'data': {
+                       'x': self.pos.x,
+                       'y': self.pos.y
+                   }
+                   }
+        self.client_socket.send(pickle.dumps(message))
