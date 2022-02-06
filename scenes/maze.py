@@ -37,16 +37,17 @@ class Maze():
         else:
             self.rows = dimension[0]
             self.cols = dimension[1]
-        
+
         self.completed = False
         self.walls = []
-        self.grid = [[Spot(i, j) for j in range(self.cols)] for i in range(self.rows)]
+        self.grid = [[Spot(i, j) for j in range(self.cols)]
+                     for i in range(self.rows)]
 
         for i in range(self.rows):
             for j in range(self.cols):
                 self.grid[i][j].add_neighbors(self.grid, self.rows, self.cols)
 
-    def build(self, init=(0,0)):
+    def build(self, init=(0, 0)):
 
         if not self.completed:
 
@@ -76,9 +77,10 @@ class Maze():
                     temp = temp - 1
 
                 if not self.completed:
-                    self._break_walls(current, self.visited[len(self.visited)-1])
+                    self._break_walls(
+                        current, self.visited[len(self.visited)-1])
 
-                current.visited = True  
+                current.visited = True
 
     def _break_walls(self, a, b):
         if a.y == b.y and a.x > b.x:
@@ -93,34 +95,3 @@ class Maze():
         if a.x == b.x and a.y > b.y:
             self.grid[a.x][a.y].walls[0] = False
             self.grid[b.x][b.y].walls[2] = False
-
-    def build_walls(self):
-        
-        self.size = 100
-
-        for i in range(self.rows):
-            for j in range(self.cols):
-                
-                # parede superior
-                if self.grid[i][j].walls[0] == True and j % 2 == 0:
-                    pos = [i*self.size + self.size/2, j*self.size]
-                    w = Wall(pos=pos, size=self.size, orientacao=0)
-                    self.walls.append(w)
-
-                # parede direita
-                if self.grid[i][j].walls[1] == True and i % 2 == 0:
-                    pos = [i*self.size + self.size, j*self.size + self.size/2]
-                    w = Wall(pos=pos, size=self.size, orientacao=1)
-                    self.walls.append(w)
-
-                # parede inferior
-                if self.grid[i][j].walls[2] == True and j % 2 == 0:
-                    pos = [i*self.size + self.size/2, j*self.size+self.size]
-                    w = Wall(pos=pos, size=self.size, orientacao=0)
-                    self.walls.append(w)
-
-                # parede esquerda
-                if self.grid[i][j].walls[3] == True and i % 2 == 0:
-                    pos = [i*self.size, j*self.size+self.size/2]
-                    w = Wall(pos=pos, size=self.size, orientacao=1)
-                    self.walls.append(w)

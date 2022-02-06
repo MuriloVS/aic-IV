@@ -12,14 +12,14 @@ vector = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, single_player=True):
+    def __init__(self, pos_x, pos_y, single_player=False):
         pg.sprite.Sprite.__init__(self)
 
         path = Path("media", "images", "tv.png")
         self.image = pg.image.load(path).convert()
         self.rect = self.image.get_rect()
 
-        self.rect.midbottom = (SCREENWIDTH/2, SCREENHEIGHT/2)
+        self.rect.midbottom = (pos_x, pos_y)
         self.pos = vector(self.rect.midbottom)
         self.vel = vector(0, 0)
         self.acc = vector(0, 0)
@@ -34,8 +34,7 @@ class Player(pg.sprite.Sprite):
             self.client_socket = socket.socket(
                 socket.AF_INET, socket.SOCK_STREAM)
             self.client_socket.connect((LOCALHOST, PORT))
-            self.update_thread = threading.Thread(target=self.send_position)
-            self.update_thread.start()
+            self.send_position()
 
     def update(self, walls):
         self.acc = vector(0, 0)
@@ -58,6 +57,7 @@ class Player(pg.sprite.Sprite):
             self.acc.y = -PLAYER_ACC
             if not self.single_player:
                 self.send_position()
+
 
         # equações para movimento
         acc_x = self.vel.x * PLAYER_FRICTION
@@ -110,6 +110,7 @@ class Player(pg.sprite.Sprite):
                     self.pos.x -= pos_x
                     self.vel.x = 0    
 
+
         # condition to stop (to print standing_frames)
         if abs(self.vel.x) <= 1:
             self.vel.x = 0
@@ -123,6 +124,11 @@ class Player(pg.sprite.Sprite):
         if self.pos != self.rect.center:
             self.rect.center = self.pos     
 
-    def send_position(self):       
-        position = {'x': self.pos.x, 'y': self.pos.y}
-        self.client_socket.send(pickle.dumps(position))
+    def send_position(self):
+        message = {'msg_id': 'player_position',
+                   'data': {
+                       'x': self.pos.x,
+                       'y': self.pos.y
+                   }
+                   }
+        self.client_socket.send(pickle.dumps(message))
