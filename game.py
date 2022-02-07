@@ -5,10 +5,10 @@ from pathlib import Path
 from math import ceil
 
 from scenes.menu_inicial import MenuInicial
-from util.tools import build_walls
+# from scenes.options import OptionsMenu
+# from scenes.credits import CreditsMenu
 from sprites.player import Player
-from sprites.wall import Wall
-
+from util.tools import build_walls
 from util.config import *
 
 vector = pg.math.Vector2
@@ -34,10 +34,13 @@ class Game():
         self.walls_list = []
 
         self.menu_incial = MenuInicial(self)
+        # self.options = OptionsMenu(self)
+        # self.credits = CreditsMenu(self)
+        self.lobby = ''
+        self.carregamento = ''
 
         self.run = True
         self.play = False
-
 
     def loop(self):
         self.play = True
@@ -54,10 +57,13 @@ class Game():
         pg.quit()
 
     def event_check(self):
+        global SCREENWIDTH, SCREENHEIGHT
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.run = False
                 self.play = False
+            if event.type == pg.VIDEORESIZE:
+                self.window = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)                 
 
     def update(self):
         self.walls.update()
@@ -80,7 +86,7 @@ class Game():
         self.players.empty()
 
         if self.scene == MENU_PRINCIPAL:
-            self.menu_incial.loop()
+            self.menu_incial.display_menu()
 
         elif self.scene == LOBBY:
             pass
