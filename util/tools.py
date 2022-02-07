@@ -1,6 +1,6 @@
 import pygame as pg
 
-from scenes.maze import Maze
+from util.maze import Maze
 from sprites.wall import Wall
 from util.config import FPS
 

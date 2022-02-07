@@ -2,7 +2,7 @@ import socket
 import threading
 import pickle
 
-from scenes.maze import Maze
+from util.maze import Maze
 from util.tools import generate_maze
 from util.config import LOCALHOST, PORT
 

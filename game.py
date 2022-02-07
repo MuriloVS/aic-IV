@@ -62,26 +62,17 @@ class Game():
     def update(self):
         self.walls.update()
 
-        # <<<<<<< maze
-        # self.player.collides = pg.sprite.spritecollide(
-        #    self.player, self.walls, False)
-        # =======
         self.players.update(self.walls)
-        # >>>>>>> main
 
     def draw(self):
         self.window.fill((150, 200, 145))
 
         # desenha todos os objetos na tela
         self.walls.draw(self.window)
-        # <<<<<<< maze
-        # self.players.draw(self.window)
-        # self.window.blit((self.player.image), (self.player.rect)) # não necessário
-        # =======
+
         # self.players.draw(self.window)
         self.window.blit((self.player.image),
                          (self.player.rect))  # não necessário
-        # >>>>>>> main
 
     def load_scene(self, scene=MENU_PRINCIPAL, **kwargs):
         self.scene = scene
@@ -105,8 +96,7 @@ class Game():
             self.game_socket.send(pickle.dumps(message))
             player = pickle.loads(self.game_socket.recv(2048))
 
-            # <<<<<<< maze
-            # # solicitando o labirinto ao servidor
+            # solicitando o labirinto ao servidor
             message = {'msg_id': 'load_maze'}
             self.game_socket.send(pickle.dumps(message))
             self.maze_list = pickle.loads(self.game_socket.recv(4096 * 5))
@@ -118,10 +108,8 @@ class Game():
                 self.player = Player(QUARTERSCREEN_X, QUARTERSCREEN_Y)
 
             self.players.add(self.player)
-            # =======
             #self.player1 = Player(SCREENWIDTH/2+100, SCREENHEIGHT/2)
             #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
-            # >>>>>>> main
 
             # adicionando sprites aos grupos
             for wall in self.maze:
@@ -168,6 +156,13 @@ class Game():
             self.compass.x -= move
             for elem in self.walls:
                 elem.rect.x -= move
+
+    def draw_text(self, text, size, x, y, font=pg.font.get_default_font()):
+        font = pg.font.Font(font,size)
+        text_surface = font.render(text, True, WHITE)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (x,y)
+        self.window.blit(text_surface,text_rect)
 
     def play_music(self):
         # podemos passar um parâmetro no método para quando tivermos outras músicas (intro, gameplay)
