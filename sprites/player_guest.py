@@ -8,7 +8,7 @@ from util.config import *
 vector = pg.math.Vector2
 
 
-class PlayerClient():
+class PlayerGuest(pg.sprite.Sprite):
     def __init__(self, pos_x, pos_y, single_player=False):
         pg.sprite.Sprite.__init__(self)
 

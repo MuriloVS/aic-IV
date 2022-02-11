@@ -15,4 +15,4 @@ class Menu():
 
     def blit_screen(self):
         self.game.window.blit(self.game.window, (0, 0))
-        pg.display.update()
+        pg.display.update()        

@@ -1,14 +1,19 @@
 import pickle
 import socket
+from threading import Thread
 import pygame as pg
 from pathlib import Path
 from math import ceil
 
+from connection.server import Server
+from connection.client import Client
 from scenes.menu_inicial import MenuInicial
 # from scenes.options import OptionsMenu
 # from scenes.credits import CreditsMenu
 from sprites.player import Player
-from util.tools import build_walls
+from sprites.player_guest import PlayerGuest
+from util.tools import build_walls, generate_maze
+from util.maze import Maze
 from util.config import *
 
 vector = pg.math.Vector2
@@ -63,6 +68,8 @@ class Game():
                 self.run = False
                 self.play = False
             if event.type == pg.VIDEORESIZE:
+                SCREENWIDTH = event.w
+                SCREENHEIGHT = event.h
                 self.window = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)                 
 
     def update(self):
@@ -92,27 +99,31 @@ class Game():
             pass
 
         elif self.scene == MAZE:
-            # estabelecendo a conexão com o servidor
-            self.game_socket = socket.socket(
-                socket.AF_INET, socket.SOCK_STREAM)
-            self.game_socket.connect((LOCALHOST, PORT))
+            # criando servidor multiplayer
+            self.server = Server()
+            self.TServer = Thread(target=self.server.subscribe)
+
+            # criando cliente para conectar no servidor
+            self.client = Client(LOCALHOST, PORT)
+            self.TClient = Thread(target=self.client.receive_message)
 
             # solicitando o número do jogador ao servidor
             message = {'msg_id': 'player'}
-            self.game_socket.send(pickle.dumps(message))
-            player = pickle.loads(self.game_socket.recv(2048))
+            self.client.send_message(message)
+            #player = pickle.loads(self.game_socket.recv(2048))
 
-            # solicitando o labirinto ao servidor
+            # envia o labirinto ao servidor
             message = {'msg_id': 'load_maze'}
-            self.game_socket.send(pickle.dumps(message))
-            self.maze_list = pickle.loads(self.game_socket.recv(4096 * 5))
+            #self.game_socket.send(pickle.dumps(message))
+            #self.maze_list = pickle.loads(self.game_socket.recv(4096))
+            self.maze_list = generate_maze()
             self.maze = build_walls(self.maze_list)
 
-            if player == 0:
-                self.player = Player(MIDSCREEN_X, MIDSCREEN_Y)
-            else:
-                self.player = Player(QUARTERSCREEN_X, QUARTERSCREEN_Y)
-
+            # if player == 0:
+            #     self.player = Player(MIDSCREEN_X, MIDSCREEN_Y)
+            # else:
+            #     self.player = Player(QUARTERSCREEN_X, QUARTERSCREEN_Y)
+            self.player = Player(MIDSCREEN_X, MIDSCREEN_Y)
             self.players.add(self.player)
             #self.player1 = Player(SCREENWIDTH/2+100, SCREENHEIGHT/2)
             #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
@@ -120,9 +131,6 @@ class Game():
             # adicionando sprites aos grupos
             for wall in self.maze:
                 self.walls.add(wall)
-
-            # finalizando a conexão com o servidor
-            self.game_socket.close()
 
             # self.play_music()
 

@@ -1,26 +1,33 @@
 import pygame as pg
+import pygame_menu as pg_m
 
 from scenes.menu import Menu
 from util.config import *
 
+
+vector = pg.math.Vector2()
+
 class MenuInicial(Menu):
+
     def __init__(self, game):
         Menu.__init__(self, game)
         self.state = "Start"
-        self.startx, self.starty = SCREENWIDTH * (3/4), SCREENHEIGHT * (3/4) + 30
-        self.optionsx, self.optionsy = SCREENWIDTH * (3/4), SCREENHEIGHT * (3/4) + 50
-        self.creditsx, self.creditsy = SCREENWIDTH * (3/4), SCREENHEIGHT * (3/4) + 70
-        self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
+
+        self.titlex, self.titley = SCREENWIDTH * (1/2), SCREENHEIGHT * (1/2)
+        self.space = 20
+
+        self.cursor_rect.midtop = (self.titlex + self.offset, self.titley + self.space * 2)
 
     def display_menu(self):
         self.run_display = True
         while self.run_display:
             self.check_events()
             self.game.window.fill(BLACK)
-            self.game.draw_text("A Maze'n Game", 30, SCREENWIDTH * (3/4), SCREENHEIGHT * (3/4) - 20)
-            self.game.draw_text("Start Game", 20, self.startx, self.starty)
-            self.game.draw_text("Options", 20, self.optionsx, self.optionsy)
-            self.game.draw_text("Credits", 20, self.creditsx, self.creditsy)
+            self.game.draw_text("A Maze'n Game", 30, self.titlex, self.titley)
+            self.game.draw_text("Single Player", 20, self.titlex, self.titley + self.space * 2)
+            self.game.draw_text("Multiplayer", 20, self.titlex, self.titley + self.space * 3)
+            self.game.draw_text("Options", 20, self.titlex, self.titley + self.space * 4)
+            self.game.draw_text("Credits", 20, self.titlex, self.titley + self.space * 5)
             self.draw_cursor()
             self.blit_screen()
 

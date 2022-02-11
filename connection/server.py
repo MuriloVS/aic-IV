@@ -4,7 +4,7 @@ import threading
 import pickle
 
 import util.tools as tool
-from connection.server_client import Client
+from connection.server_client import ServerClient
 from util.config import LOCALHOST, PORT
 
 
@@ -23,7 +23,8 @@ class Server():
         print(f'Servidor rodando em {LOCALHOST} na porta {PORT}')
 
         self.clients = []
-        self.maze = tool.generate_maze()
+        self.playerID = 0
+        self.maze = tool.generate_maze() # AQUI
 
         self.online = True
 
@@ -32,23 +33,23 @@ class Server():
         TQuit.start()
 
     def subscribe(self):
-        current_player = len(self.clients)
-
         while self.online:
             try:
                 # accept inicia a conexão com o servidor
                 # retornando dados do cliente e endereço/porta usados
                 client, address = self.s.accept()
-                print(client, address)
+                #print(client, address)
 
-                c = Client(self, client, current_player)
+                c = ServerClient(self, client, self.playerID)
                 self.clients.append(client)
+
                 # Cria thread para receber msgns do cliente
                 thread = threading.Thread(target=c.start, args=())
                 thread.start()
 
-                current_player += 1
-                print(current_player)
+                self.personal_message(client, self.playerID)
+
+                self.playerID += 1
             except:
                 exit(0)
 
@@ -60,6 +61,15 @@ class Server():
 
         # Encerra socket do cliente
         client.conn.close()
+
+    def personal_message(self, conn, message):
+        # Recebendo variáveis já codificados para envio
+        message = pickle.dumps(message)
+        send_length = len(message)
+
+        # Envia mensagem a todos clientes conectados
+        conn.send(send_length)
+        conn.send(message)
 
     def broadcast(self, message):  # ainda não é usada
         for client in self.clients:

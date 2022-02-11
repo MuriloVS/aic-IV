@@ -6,7 +6,7 @@ from util.config import *
 # - recebe msgns do cliente
 # - lida com solicitações e se comunica com a classe principal
 
-class Client():
+class ServerClient:
 
     # Inicializa a instância do cliente no server
     def __init__(self, server, conn, id):
@@ -50,4 +50,4 @@ class Client():
             self.conn.send(pickle.dumps(len(self.s.clients) - 1))
 
         elif message['msg_id'] == 'load_maze':
-            self.conn.sendall(pickle.dumps(self.s.maze))
+            self.s.broadcast(pickle.dumps(self.s.maze))
