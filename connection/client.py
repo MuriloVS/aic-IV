@@ -21,22 +21,23 @@ class Client:
 
     # Recebe mensagem
     def receive_message(self):
-        pass
         # Loop de recebimento de msgm
-        # while self.online: # enquanto cliente está online
-        #     try:
-        #         # espera receber mensagem do servidor
-        #         msg_lenght = self.conn.recv(HEADER).decode(FORMAT) # recebendo e decodificando (em utf-8) tamanho do nome
-        #         if msg_lenght: # se tam for recebido
-        #             msg_lenght = int(msg_lenght) # armazena valor em int
-        #             msg = self.conn.recv(msg_lenght).decode(FORMAT) # recebe e decodifica msgm
+        while self.online: # enquanto cliente está online
+            try:
+                # espera receber mensagem do servidor
+                msg_lenght = pickle.loads(self.conn.recv(HEADER))
+                if msg_lenght: # se tam for recebido
+                    msg_lenght = int(msg_lenght) # armazena valor em int
+                    msg = pickle.loads(self.conn.recv(msg_lenght))
+                    print(f'[CLIENTE] Mensagem recebida {msg}')
 
-        #             # Chama função para lidar com mensagem
-        #             self.handleMsg(msg)
+                    # Chama função para lidar com mensagem
+                    self.handle_message(msg)
 
-        #     except: # Se houver erro ou falha de conexão
-        #         # seta cliente como offline
-        #         self.online = False
+            except:
+                # Se houver erro ou falha de conexão
+                # seta cliente como offline
+                self.online = False
 
     def send_message(self, message):
         # Recebendo variáveis já codificados para envio
@@ -46,6 +47,10 @@ class Client:
         # Envia mensagem a todos clientes conectados
         self.conn.send(send_length)
         self.conn.send(message)
+
+
+    def handle_message(self, message):
+        pass
 
     def desconnect(self):
         self.conn.close()

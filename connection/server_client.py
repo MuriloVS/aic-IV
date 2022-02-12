@@ -27,27 +27,31 @@ class ServerClient:
         
         # Enquanto o cliente estiver online recebe mensagem dele
         while self.clientOnline and self.s.online:
-            try:
-                # Recebe o tamanha da mensagem a ler
-                message = pickle.loads(self.conn.recv(HEADER))
-                print(message['msg_id'])
+            # try:
+                # espera receber mensagem do servidor
+            msg_lenght = pickle.loads(self.conn.recv(HEADER))
+            if msg_lenght: # se tam for recebido
+                msg_lenght = int(msg_lenght) # armazena valor em int
+                msg = pickle.loads(self.conn.recv(msg_lenght))
 
-                # Chama função para lidar com mensagem
-                self.handleMsg(message)
+            print(msg)
+            # Chama função para lidar com mensagem
+            self.handleMsg(msg)
                 
-            except: # Se houver erro ou falha de conexão
-                # Desconecta cliente
-                self.s.unsubscribe(self)
-                self.clientOnline = False
-                return
+            # except:
+            #     # Se houver erro ou falha de conexão
+            #     # Desconecta cliente
+            #     self.s.unsubscribe(self)
+            #     self.clientOnline = False
 
     # Lida com mensagem recebida
     def handleMsg(self, message):
         if message['msg_id'] == 'player_position':
-            print(f'Player {self.id} - position {message["data"]}')
+            #print(f'Player {self.id} - position {message["data"]}')
+            self.s.broadcast(message)
 
         elif message['msg_id'] == 'player':
-            self.conn.send(pickle.dumps(len(self.s.clients) - 1))
+            self.s.personal_message(self.conn, self.id)
 
         elif message['msg_id'] == 'load_maze':
-            self.s.broadcast(pickle.dumps(self.s.maze))
+            self.s.broadcast(self.s.maze)

@@ -10,7 +10,7 @@ from connection.client import Client
 from scenes.menu_inicial import MenuInicial
 # from scenes.options import OptionsMenu
 # from scenes.credits import CreditsMenu
-from sprites.player import Player
+from sprites.player_online import PlayerOnline
 from sprites.player_guest import PlayerGuest
 from util.tools import build_walls, generate_maze
 from util.maze import Maze
@@ -60,6 +60,8 @@ class Game():
             pg.display.flip()
 
         pg.quit()
+        self.client.desconnect()
+        self.server.close_server()
 
     def event_check(self):
         global SCREENWIDTH, SCREENHEIGHT
@@ -102,28 +104,27 @@ class Game():
             # criando servidor multiplayer
             self.server = Server()
             self.TServer = Thread(target=self.server.subscribe)
+            self.TServer.start()
 
             # criando cliente para conectar no servidor
             self.client = Client(LOCALHOST, PORT)
             self.TClient = Thread(target=self.client.receive_message)
+            self.TClient.start()
 
             # solicitando o número do jogador ao servidor
             message = {'msg_id': 'player'}
             self.client.send_message(message)
-            #player = pickle.loads(self.game_socket.recv(2048))
 
             # envia o labirinto ao servidor
-            message = {'msg_id': 'load_maze'}
-            #self.game_socket.send(pickle.dumps(message))
-            #self.maze_list = pickle.loads(self.game_socket.recv(4096))
             self.maze_list = generate_maze()
             self.maze = build_walls(self.maze_list)
+            message = {'msg_id': 'load_maze'}
 
             # if player == 0:
             #     self.player = Player(MIDSCREEN_X, MIDSCREEN_Y)
             # else:
             #     self.player = Player(QUARTERSCREEN_X, QUARTERSCREEN_Y)
-            self.player = Player(MIDSCREEN_X, MIDSCREEN_Y)
+            self.player = PlayerOnline(MIDSCREEN_X, MIDSCREEN_Y, self.client)
             self.players.add(self.player)
             #self.player1 = Player(SCREENWIDTH/2+100, SCREENHEIGHT/2)
             #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)

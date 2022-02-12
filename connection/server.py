@@ -23,14 +23,10 @@ class Server():
         print(f'Servidor rodando em {LOCALHOST} na porta {PORT}')
 
         self.clients = []
-        self.playerID = 0
-        self.maze = tool.generate_maze() # AQUI
+        self.playerID = 1
+        self.maze = []
 
         self.online = True
-
-        # Inicializa thread que capta uma entrada para encerrar servidor
-        TQuit = threading.Thread(target=self.close_server, args=())
-        TQuit.start()
 
     def subscribe(self):
         while self.online:
@@ -41,48 +37,51 @@ class Server():
                 #print(client, address)
 
                 c = ServerClient(self, client, self.playerID)
-                self.clients.append(client)
+                print(f'[NOVA CONEXÃO] Player {self.playerID}')
+                self.clients.append(c)
 
                 # Cria thread para receber msgns do cliente
                 thread = threading.Thread(target=c.start, args=())
                 thread.start()
 
-                self.personal_message(client, self.playerID)
-
                 self.playerID += 1
+
             except:
-                exit(0)
+                self.online = False
 
     # Realiza desinscrição de um usuário
     def unsubscribe(self, client):
-        print(f'Cliente [{client.id}] se desconectou.')
+        print(f'[DESCONEXÃO] Player {client.id}')
         # Remova usuário das listas de clientes conectados
-        self.clients.remove(client.conn)
+        self.clients.remove(client)
 
         # Encerra socket do cliente
         client.conn.close()
 
     def personal_message(self, conn, message):
         # Recebendo variáveis já codificados para envio
-        message = pickle.dumps(message)
-        send_length = len(message)
+        message, send_length = pickle_message(message)
 
         # Envia mensagem a todos clientes conectados
         conn.send(send_length)
         conn.send(message)
 
-    def broadcast(self, message):  # ainda não é usada
+    def broadcast(self, message):
+        # Recebendo variáveis já codificados para envio
+        message, send_length = pickle_message(message)
+
         for client in self.clients:
+            client.conn.send(send_length)
             client.conn.send(message)
 
     def close_server(self):
-        # Espera input no terminal do servidor para encerrar aplicação
-        input("Pressione [ENTER] para encerrar o servidor\n")
-
-        # Ao receber, seta variável para offline, encerra o socket e fecha app
         self.online = False
         self.s.close()        
 
+def pickle_message(message):
+    message = pickle.dumps(message)
+    send_length = pickle.dumps(len(message))
+    return message, send_length
 
 if "__main__" == __name__:
     

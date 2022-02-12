@@ -8,9 +8,11 @@ from util.config import *
 vector = pg.math.Vector2
 
 
-class Player(pg.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, single_player=False):
+class PlayerOnline(pg.sprite.Sprite):
+    def __init__(self, pos_x, pos_y, client):
         pg.sprite.Sprite.__init__(self)
+
+        self.client = client
 
         path = Path("media", "images", "tv.png")
         self.image = pg.image.load(path).convert()
@@ -23,38 +25,21 @@ class Player(pg.sprite.Sprite):
         self.x = pos_x
         self.y = pos_y
 
-        self.walking = False
-
-        self.single_player = single_player
-
-        if not self.single_player:
-            self.client_socket = socket.socket(
-                socket.AF_INET, socket.SOCK_STREAM)
-            self.client_socket.connect((LOCALHOST, PORT))
-            self.send_position()
-
     def update(self, walls):
         self.acc = vector(0, 0)
         key = pg.key.get_pressed()
 
+        pos_inicial = vector(self.pos.x, self.pos.y)
+
         # movimento
         if key[pg.K_LEFT]:
             self.acc.x = -PLAYER_ACC
-            if not self.single_player:
-                self.send_position()
         if key[pg.K_RIGHT]:
             self.acc.x = PLAYER_ACC
-            if not self.single_player:
-                self.send_position()
         if key[pg.K_DOWN]:
             self.acc.y = PLAYER_ACC
-            if not self.single_player:
-                self.send_position()
         if key[pg.K_UP]:
             self.acc.y = -PLAYER_ACC
-            if not self.single_player:
-                self.send_position()
-
 
         # equações para movimento
         acc_x = self.vel.x * PLAYER_FRICTION
@@ -72,7 +57,6 @@ class Player(pg.sprite.Sprite):
         self.pos.y += pos_y
 
         self.rect.center = self.pos  
-        self.walking = True
 
         collides = pg.sprite.spritecollide(self, walls, False)
 
@@ -119,7 +103,10 @@ class Player(pg.sprite.Sprite):
             self.walking = False
 
         if self.pos != self.rect.center:
-            self.rect.center = self.pos     
+            self.rect.center = self.pos  
+
+        if self.pos != pos_inicial:
+            self.send_position()
 
     def send_position(self):
         message = {'msg_id': 'player_position',
@@ -128,4 +115,4 @@ class Player(pg.sprite.Sprite):
                        'y': self.pos.y
                    }
                    }
-        self.client_socket.send(pickle.dumps(message))
+        self.client.send_message(message)
