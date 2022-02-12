@@ -110,11 +110,11 @@ class Game():
             self.client = Client(LOCALHOST, PORT)
             self.TClient = Thread(target=self.client.receive_message)
             self.TClient.start()
-
+            print('4186456')
             # solicitando o número do jogador ao servidor
             message = {'msg_id': 'player'}
             self.client.send_message(message)
-
+            print('dskioapdi')
             # envia o labirinto ao servidor
             self.maze_list = generate_maze()
             self.maze = build_walls(self.maze_list)

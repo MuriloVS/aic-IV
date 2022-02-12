@@ -115,4 +115,5 @@ class PlayerOnline(pg.sprite.Sprite):
                        'y': self.pos.y
                    }
                    }
+
         self.client.send_message(message)
