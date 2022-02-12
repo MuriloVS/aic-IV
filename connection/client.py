@@ -40,13 +40,11 @@ class Client:
                 self.online = False
 
     def send_message(self, message):
-        # Recebendo variáveis já codificados para envio
-        message = pickle.dumps(message)
-        send_length = pickle.dumps(len(message))
+        msg = pickle.dumps(message)
+        send_length = pickle.dumps(len(msg))
 
-        # Envia mensagem a todos clientes conectados
         self.conn.send(send_length)
-        self.conn.send(message)
+        self.conn.send(msg)
 
 
     def handle_message(self, message):
