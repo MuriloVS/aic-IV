@@ -14,7 +14,7 @@ def wait_for_key() -> bool:
                 if event.key == pg.K_RETURN:
                     return True
 
-def generate_maze():
+def generate_maze_list(level, dimension=False, numPlayers=1):
     maze = Maze()
     maze.build()
     maze_list = []
@@ -26,7 +26,7 @@ def generate_maze():
 
     return maze_list
 
-def generate_walls_sprites(maze_list):
+def generate_walls_sprites_group(maze_list):
 
     size = 100
     walls_list = []

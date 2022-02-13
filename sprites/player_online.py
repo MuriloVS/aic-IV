@@ -109,11 +109,12 @@ class PlayerOnline(pg.sprite.Sprite):
             self.send_position()
 
     def send_position(self):
-        message = {'msg_id': 'player_position',
+        message = {'id': 'player_position',
                    'data': {
+                       'player_id': self.client.id,
                        'x': self.pos.x,
                        'y': self.pos.y
-                   }
+                           }
                    }
 
         self.client.send_message(message)

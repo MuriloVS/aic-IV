@@ -11,7 +11,7 @@ from scenes.menu_inicial import MenuInicial
 # from scenes.credits import CreditsMenu
 from sprites.player_online import PlayerOnline
 from sprites.player_guest import PlayerGuest
-from util.tools import generate_walls_sprites
+from util.tools import generate_maze_list, generate_walls_sprites_group
 from util.maze import Maze
 from util.config import *
 
@@ -115,23 +115,24 @@ class Game():
             self.TClient = Thread(target=self.client.receive_message)
             self.TClient.start()
 
-            # envia o labirinto ao servidor
-            self.maze = Maze(level=5, dimension=0, numPlayers=2)
-            self.maze.build()
-            self.maze.walls = generate_walls_sprites(self.maze.grid)
-            # message = {'msg_id': 'load_maze'}
+            # lobby
 
-            # if player == 0:
-            #     self.player = Player(MIDSCREEN_X, MIDSCREEN_Y)
-            # else:
-            #     self.player = Player(QUARTERSCREEN_X, QUARTERSCREEN_Y)
+            # envia o labirinto ao servidor
+            self.maze_list = generate_maze_list(level=5, dimension=0, numPlayers=2)
+            self.maze = generate_walls_sprites_group(self.maze_list)
+            message = {'id': 'load_maze',
+                       'data': self.maze_list
+                      }
+            self.client.send_message(message)
+
+            # geração das posições dos player
+
+
             self.player = PlayerOnline(MIDSCREEN_X, MIDSCREEN_Y, self.client)
             self.players.add(self.player)
-            #self.player1 = Player(SCREENWIDTH/2+100, SCREENHEIGHT/2)
-            #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
 
             # adicionando sprites aos grupos
-            for wall in self.maze.walls:
+            for wall in self.maze:
                 self.walls.add(wall)
 
             # self.play_music()

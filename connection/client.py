@@ -52,14 +52,17 @@ class Client:
     # Lida com mensagem recebida
     def handle_msg(self, message):
         # try:
-        if message['msg_id'] == 'player_id':
+        if message['id'] == 'player_id':
             self.id = message['data']
 
-        elif message['msg_id'] == 'player':
+        elif message['id'] == 'player':
             self.s.personal_message(self.conn, self.id)
 
-        elif message['msg_id'] == 'load_maze':
-            self.s.broadcast(self.s.maze)
+        elif message['id'] == 'load_maze':
+            # self.s.broadcast(self.s.maze)
+            print(message['data'][0][1])
+        else:
+            print(f'[CLIENTE] ERRO: id de msgm recebida não identificada. Mensagem: {message}')
         # except:
         # print(f'ERRO HANDLE MSG: {message}')
 

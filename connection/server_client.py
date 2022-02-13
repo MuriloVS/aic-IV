@@ -23,7 +23,7 @@ class ServerClient:
         self.clientOnline = True
 
         # Enviando mensagem com ID do player
-        message = {'msg_id': 'player_id',
+        message = {'id': 'player_id',
                    'data': self.id
                   }
 
@@ -41,7 +41,7 @@ class ServerClient:
                     msg_lenght = int(msg_lenght) # armazena valor em int
                     msg = pickle.loads(self.conn.recv(msg_lenght))
 
-                print(f'[SERVER] Mensagem recebida:({msg_lenght}){msg}')
+                print(f'[SERVER] Mensagem recebida:{msg}')
                 # Chama função para lidar com mensagem
                 self.handle_msg(msg)
                 
@@ -54,14 +54,13 @@ class ServerClient:
     # Lida com mensagem recebida
     def handle_msg(self, message):
         # try:
-        if message['msg_id'] == 'player_position':
-            print(f'Player {self.id} - position {message["data"]}')
-            # self.s.broadcast(message)
+        if message['id'] == 'player_position':
+            self.s.broadcast(message)
 
-        elif message['msg_id'] == 'player':
+        elif message['id'] == 'player':
             self.s.personal_message(self.conn, self.id)
 
-        elif message['msg_id'] == 'load_maze':
-            self.s.broadcast(self.s.maze)
+        elif message['id'] == 'load_maze':
+            self.s.broadcast(message)
         # except:
         # print(f'ERRO HANDLE MSG: {message}')
