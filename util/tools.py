@@ -26,7 +26,7 @@ def generate_maze():
 
     return maze_list
 
-def build_walls(maze_list):
+def generate_walls_sprites(maze_list):
 
     size = 100
     walls_list = []

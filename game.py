@@ -11,7 +11,7 @@ from scenes.menu_inicial import MenuInicial
 # from scenes.credits import CreditsMenu
 from sprites.player_online import PlayerOnline
 from sprites.player_guest import PlayerGuest
-from util.tools import build_walls, generate_maze
+from util.tools import generate_walls_sprites
 from util.maze import Maze
 from util.config import *
 
@@ -65,9 +65,14 @@ class Game():
     def event_check(self):
         global SCREENWIDTH, SCREENHEIGHT
         for event in pg.event.get():
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.run = False
+                    self.play = False      
             if event.type == pg.QUIT:
                 self.run = False
                 self.play = False
+                
             if event.type == pg.VIDEORESIZE:
                 SCREENWIDTH = event.w
                 SCREENHEIGHT = event.h
@@ -110,14 +115,11 @@ class Game():
             self.TClient = Thread(target=self.client.receive_message)
             self.TClient.start()
 
-            # solicitando o número do jogador ao servidor
-            message = {'msg_id': 'player'}
-            self.client.send_message(message)
-
             # envia o labirinto ao servidor
-            self.maze_list = generate_maze()
-            self.maze = build_walls(self.maze_list)
-            message = {'msg_id': 'load_maze'}
+            self.maze = Maze(level=5, dimension=0, numPlayers=2)
+            self.maze.build()
+            self.maze.walls = generate_walls_sprites(self.maze.grid)
+            # message = {'msg_id': 'load_maze'}
 
             # if player == 0:
             #     self.player = Player(MIDSCREEN_X, MIDSCREEN_Y)
@@ -129,7 +131,7 @@ class Game():
             #self.player2 = Player(self, MIDSCREEN_X, MIDSCREEN_Y, RED)
 
             # adicionando sprites aos grupos
-            for wall in self.maze:
+            for wall in self.maze.walls:
                 self.walls.add(wall)
 
             # self.play_music()

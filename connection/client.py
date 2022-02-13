@@ -1,5 +1,6 @@
 import pickle
 import socket
+from uuid import uuid4
 
 from util.config import *
 
@@ -8,6 +9,8 @@ class Client:
 
     # Inicilizando cliente socket
     def __init__(self, address, port):
+
+        self.id = 0
 
         # Define família e tipo da conexão (AF_INET -> IPV4 | SOCK_STREAM -> TCP)
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,16 +43,25 @@ class Client:
                 self.online = False
 
     def send_message(self, message):
-        print('cliente msm ',message)
         msg = pickle.dumps(message)
         send_length = pickle.dumps(len(msg))
 
         self.conn.send(send_length)
         self.conn.send(msg)
 
-
+    # Lida com mensagem recebida
     def handle_msg(self, message):
-        pass
+        # try:
+        if message['msg_id'] == 'player_id':
+            self.id = message['data']
+
+        elif message['msg_id'] == 'player':
+            self.s.personal_message(self.conn, self.id)
+
+        elif message['msg_id'] == 'load_maze':
+            self.s.broadcast(self.s.maze)
+        # except:
+        # print(f'ERRO HANDLE MSG: {message}')
 
     def desconnect(self):
         self.conn.close()

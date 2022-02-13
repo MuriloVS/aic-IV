@@ -60,6 +60,7 @@ class Server():
 
     def personal_message(self, conn, message):
         # Recebendo variáveis já codificados para envio
+        print(f'[SERVIDOR] Enviando msgm pessoal: {message}')
         message, send_length = pickle_message(message)
 
         # Envia mensagem a todos clientes conectados

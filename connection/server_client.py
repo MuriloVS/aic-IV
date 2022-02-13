@@ -22,6 +22,13 @@ class ServerClient:
         # Define cliente como online para loop principal
         self.clientOnline = True
 
+        # Enviando mensagem com ID do player
+        message = {'msg_id': 'player_id',
+                   'data': self.id
+                  }
+
+        self.s.personal_message(self.conn, message)
+
     # Aguarda o recebimento de uma mensagem do cliente
     def start(self):
         
