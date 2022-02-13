@@ -27,25 +27,26 @@ class ServerClient:
         
         # Enquanto o cliente estiver online recebe mensagem dele
         while self.clientOnline and self.s.online:
-            # try:
-                # espera receber mensagem do servidor
-            msg_lenght = pickle.loads(self.conn.recv(HEADER))
-            if msg_lenght: # se tam for recebido
-                msg_lenght = int(msg_lenght) # armazena valor em int
-                msg = pickle.loads(self.conn.recv(msg_lenght))
+            try:
+                    # espera receber mensagem do servidor
+                msg_lenght = pickle.loads(self.conn.recv(HEADER))
+                if msg_lenght: # se tam for recebido
+                    msg_lenght = int(msg_lenght) # armazena valor em int
+                    msg = pickle.loads(self.conn.recv(msg_lenght))
 
-            print(f'[SERVER] Mensagem recebida:({msg_lenght}){msg}')
-            # Chama função para lidar com mensagem
-            self.handleMsg(msg)
+                print(f'[SERVER] Mensagem recebida:({msg_lenght}){msg}')
+                # Chama função para lidar com mensagem
+                self.handle_msg(msg)
                 
-            # except:
-            #     # Se houver erro ou falha de conexão
-            #     # Desconecta cliente
-            #     self.s.unsubscribe(self)
-            #     self.clientOnline = False
+            except:
+                # Se houver erro ou falha de conexão
+                # Desconecta cliente
+                self.s.unsubscribe(self)
+                self.clientOnline = False
 
     # Lida com mensagem recebida
-    def handleMsg(self, message):
+    def handle_msg(self, message):
+        # try:
         if message['msg_id'] == 'player_position':
             print(f'Player {self.id} - position {message["data"]}')
             # self.s.broadcast(message)
@@ -55,3 +56,5 @@ class ServerClient:
 
         elif message['msg_id'] == 'load_maze':
             self.s.broadcast(self.s.maze)
+        # except:
+        # print(f'ERRO HANDLE MSG: {message}')

@@ -32,7 +32,7 @@ class Client:
                     print(f'[CLIENTE] Mensagem recebida {msg}')
 
                     # Chama função para lidar com mensagem
-                    self.handle_message(msg)
+                    self.handle_msg(msg)
 
             except:
                 # Se houver erro ou falha de conexão
@@ -40,6 +40,7 @@ class Client:
                 self.online = False
 
     def send_message(self, message):
+        print('cliente msm ',message)
         msg = pickle.dumps(message)
         send_length = pickle.dumps(len(msg))
 
@@ -47,7 +48,7 @@ class Client:
         self.conn.send(msg)
 
 
-    def handle_message(self, message):
+    def handle_msg(self, message):
         pass
 
     def desconnect(self):

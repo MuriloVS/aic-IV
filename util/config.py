@@ -8,7 +8,7 @@ FPS = 30
 
 # conexão
 LOCALHOST = '127.0.0.1'
-PORT = 6789
+PORT = 5000
 HEADER = 2048
 
 # tamanho da tela
@@ -43,8 +43,3 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 PURPLE = (255, 0, 255)
 EBONY = (33, 36, 31)
-
-# conexão
-LOCALHOST = '127.0.0.1'
-PORT = 6789
-
