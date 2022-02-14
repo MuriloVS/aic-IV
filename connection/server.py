@@ -20,7 +20,7 @@ class Server():
         # listen para esperar as conexões
         self.s.listen(2)
 
-        print(f'Servidor rodando em {LOCALHOST} na porta {PORT}')
+        # print(f'Servidor rodando em {LOCALHOST} na porta {PORT}')
 
         self.clients = []
         self.playerID = 1
@@ -34,10 +34,10 @@ class Server():
                 # accept inicia a conexão com o servidor
                 # retornando dados do cliente e endereço/porta usados
                 client, address = self.s.accept()
-                #print(client, address)
+                ## print(client, address)
 
+                # print(f'[NOVA CONEXÃO] Player {self.playerID}')
                 c = ServerClient(self, client, self.playerID)
-                print(f'[NOVA CONEXÃO] Player {self.playerID}')
                 self.clients.append(c)
 
                 # Cria thread para receber msgns do cliente
@@ -51,7 +51,7 @@ class Server():
 
     # Realiza desinscrição de um usuário
     def unsubscribe(self, client):
-        print(f'[DESCONEXÃO] Player {client.id}')
+        # print(f'[DESCONEXÃO] Player {client.id}')
         # Remova usuário das listas de clientes conectados
         self.clients.remove(client)
 
@@ -60,11 +60,13 @@ class Server():
 
     def personal_message(self, conn, message):
         # Recebendo variáveis já codificados para envio
-        print(f'[SERVIDOR] Enviando msgm pessoal: {message}')
+        # print(f'[SERVIDOR] Enviando msgm pessoal: {message}')
         message, send_length = pickle_message(message)
 
         # Envia mensagem a todos clientes conectados
         conn.send(send_length)
+        import time
+        time.sleep(0.1)
         conn.send(message)
 
     def broadcast(self, message):

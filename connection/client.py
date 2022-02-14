@@ -8,9 +8,10 @@ from util.config import *
 class Client:
 
     # Inicilizando cliente socket
-    def __init__(self, address, port):
+    def __init__(self, game, address, port):
 
         self.id = 0
+        self.g = game
 
         # Define família e tipo da conexão (AF_INET -> IPV4 | SOCK_STREAM -> TCP)
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,7 +33,7 @@ class Client:
                 if msg_lenght: # se tam for recebido
                     msg_lenght = int(msg_lenght) # armazena valor em int
                     msg = pickle.loads(self.conn.recv(msg_lenght))
-                    print(f'[CLIENTE] Mensagem recebida {msg}')
+                    #print(f'[CLIENTE] Mensagem recebida {msg}')
 
                     # Chama função para lidar com mensagem
                     self.handle_msg(msg)
@@ -59,8 +60,10 @@ class Client:
             self.s.personal_message(self.conn, self.id)
 
         elif message['id'] == 'load_maze':
-            # self.s.broadcast(self.s.maze)
-            print(message['data'][0][1])
+            print('labirinto recebido')
+            self.g.maze_list = message['data']
+            self.g.update_maze()
+            print('[CLIENTE] Labirinto recebido')
         else:
             print(f'[CLIENTE] ERRO: id de msgm recebida não identificada. Mensagem: {message}')
         # except:

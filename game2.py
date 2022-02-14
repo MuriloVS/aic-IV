@@ -35,6 +35,7 @@ class Game():
         # bússola para controlar posição dos objetos
         self.compass = vector(0, 0)
 
+        self.maze_list = []
         self.walls_list = []
 
         self.menu_incial = MenuInicial(self)
@@ -60,7 +61,6 @@ class Game():
 
         pg.quit()
         self.client.desconnect()
-        self.server.close_server()
 
     def event_check(self):
         global SCREENWIDTH, SCREENHEIGHT
@@ -105,35 +105,20 @@ class Game():
             pass
 
         elif self.scene == MAZE:
-            # criando servidor multiplayer
-            self.server = Server()
-            self.TServer = Thread(target=self.server.subscribe)
-            self.TServer.start()
-
             # criando cliente para conectar no servidor
             self.client = Client(self, LOCALHOST, PORT)
             self.TClient = Thread(target=self.client.receive_message)
             self.TClient.start()
 
-            # lobby
-
             # envia o labirinto ao servidor
-            self.maze_list = generate_maze_list(level=2, dimension=0, numPlayers=2)
-            self.maze = generate_walls_sprites_group(self.maze_list)
-            message = {'id': 'load_maze',
-                       'data': self.maze_list
-                      }
-            self.client.send_message(message)
+            # self.maze_list = []
+            # message = {'id': 'get_maze'}
+            # self.client.send_message(message)
+            # espera receber o labirinto do servidor
 
             # geração das posições dos player
-
-            # gerações do player 1 e guests
             self.player = PlayerOnline(MIDSCREEN_X, MIDSCREEN_Y, self.client)
             self.players.add(self.player)
-
-            # adicionando sprites aos grupos
-            for wall in self.maze:
-                self.walls.add(wall)
 
             # self.play_music()
 
@@ -173,6 +158,12 @@ class Game():
             self.compass.x -= move
             for elem in self.walls:
                 elem.rect.x -= move
+
+    def update_maze(self):
+        self.maze = generate_walls_sprites_group(self.maze_list)
+        # adicionando sprites aos grupos
+        for wall in self.maze:
+            self.walls.add(wall)
 
     def draw_text(self, text, size, x, y, font=pg.font.get_default_font()):
         font = pg.font.Font(font,size)
