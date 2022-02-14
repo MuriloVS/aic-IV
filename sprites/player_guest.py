@@ -9,7 +9,7 @@ vector = pg.math.Vector2
 
 
 class PlayerGuest(pg.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, single_player=False):
+    def __init__(self, pos_x, pos_y):
         pg.sprite.Sprite.__init__(self)
 
         path = Path("media", "images", "tv.png")
@@ -25,51 +25,10 @@ class PlayerGuest(pg.sprite.Sprite):
 
         self.walking = False
 
-        self.single_player = single_player
-
-        if not self.single_player:
-            self.client_socket = socket.socket(
-                socket.AF_INET, socket.SOCK_STREAM)
-            self.client_socket.connect((LOCALHOST, PORT))
-            self.send_position()
-
     def update(self, walls):
         self.acc = vector(0, 0)
-        key = pg.key.get_pressed()
-
-        # movimento
-        if key[pg.K_LEFT]:
-            self.acc.x = -PLAYER_ACC
-            if not self.single_player:
-                self.send_position()
-        if key[pg.K_RIGHT]:
-            self.acc.x = PLAYER_ACC
-            if not self.single_player:
-                self.send_position()
-        if key[pg.K_DOWN]:
-            self.acc.y = PLAYER_ACC
-            if not self.single_player:
-                self.send_position()
-        if key[pg.K_UP]:
-            self.acc.y = -PLAYER_ACC
-            if not self.single_player:
-                self.send_position()
-
 
         # equações para movimento
-        acc_x = self.vel.x * PLAYER_FRICTION
-        self.acc.x += acc_x
-        vel_x = self.acc.x
-        self.vel.x += vel_x
-        pos_x = self.vel.x + 0.5 * self.acc.x
-        self.pos.x += pos_x
-
-        acc_y = self.vel.y * PLAYER_FRICTION
-        self.acc.y += acc_y
-        vel_y = self.acc.y
-        self.vel.y += vel_y
-        pos_y = self.vel.y + 0.5 * self.acc.y
-        self.pos.y += pos_y
 
         self.rect.center = self.pos  
         self.walking = True
