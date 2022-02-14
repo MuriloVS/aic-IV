@@ -16,8 +16,8 @@ class ServerClient:
         # Armazena a referência ao servidor para realizar comunicação
         self.s = server
 
-        # Recebe informações do cliente
-        self.conn = conn # recebe o socket do cliente
+        # recebe o socket do cliente
+        self.conn = conn
 
         # Define cliente como online para loop principal
         self.clientOnline = True
@@ -40,20 +40,18 @@ class ServerClient:
         # Enquanto o cliente estiver online recebe mensagem dele
         while self.clientOnline and self.s.online:
             try:
-                    # espera receber mensagem do servidor
+                # espera receber mensagem do servidor
                 msg_lenght = pickle.loads(self.conn.recv(HEADER))
                 if msg_lenght: # se tam for recebido
-                    # print(msg_lenght)
                     msg_lenght = int(msg_lenght) # armazena valor em int
                     msg = pickle.loads(self.conn.recv(msg_lenght))
-                    # print(msg)
                     #print(f'[SERVIDOR] Mensagem recebida:{msg["id"]}')
-                # Chama função para lidar com mensagem
+                    
+                    # Chama função para lidar com mensagem
                     self.handle_msg(msg)
                 
             except:
-                # Se houver erro ou falha de conexão
-                # Desconecta cliente
+                # Se houver erro ou falha de conexão desconecta cliente
                 self.s.unsubscribe(self)
                 self.clientOnline = False
 
@@ -61,10 +59,9 @@ class ServerClient:
     def handle_msg(self, message):
         # try:
         if message['id'] == 'player_position':
-            #self.s.broadcast(message)
-            pass
+            self.s.broadcast(self.conn, message)
 
-        elif message['id'] == 'player':
+        elif message['id'] == 'player_id':
             self.s.personal_message(self.conn, self.id)
 
         elif message['id'] == 'load_maze':
@@ -75,10 +72,6 @@ class ServerClient:
                        'data': self.s.maze
                       }
             self.s.personal_message(self.conn, msg)
-        
-        # elif message['id'] == 'update_maze':
-        #     self.s.maze = message['data']
-        #     self.s.broadcast(message)
         
         # except:
         # print(f'ERRO HANDLE MSG: {message}')

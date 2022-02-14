@@ -118,6 +118,7 @@ class Game():
 
             # geração das posições dos player
             self.player = PlayerOnline(MIDSCREEN_X, MIDSCREEN_Y, self.client)
+            self.player2 = PlayerGuest(MIDSCREEN_X, MIDSCREEN_Y) #continuar aqui
             self.players.add(self.player)
 
             # self.play_music()

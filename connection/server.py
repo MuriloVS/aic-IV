@@ -1,4 +1,4 @@
-from audioop import add
+import time
 import socket
 import threading
 import pickle
@@ -34,7 +34,6 @@ class Server():
                 # accept inicia a conexão com o servidor
                 # retornando dados do cliente e endereço/porta usados
                 client, address = self.s.accept()
-                ## print(client, address)
 
                 # print(f'[NOVA CONEXÃO] Player {self.playerID}')
                 c = ServerClient(self, client, self.playerID)
@@ -51,31 +50,31 @@ class Server():
 
     # Realiza desinscrição de um usuário
     def unsubscribe(self, client):
-        # print(f'[DESCONEXÃO] Player {client.id}')
         # Remova usuário das listas de clientes conectados
         self.clients.remove(client)
+
+        # print(f'[DESCONEXÃO] Player {client.id}')
 
         # Encerra socket do cliente
         client.conn.close()
 
     def personal_message(self, conn, message):
         # Recebendo variáveis já codificados para envio
-        # print(f'[SERVIDOR] Enviando msgm pessoal: {message}')
         message, send_length = pickle_message(message)
 
         # Envia mensagem a todos clientes conectados
         conn.send(send_length)
-        import time
         time.sleep(0.1)
         conn.send(message)
 
-    def broadcast(self, message):
+    def broadcast(self, conn, message):
         # Recebendo variáveis já codificados para envio
         message, send_length = pickle_message(message)
 
         for client in self.clients:
-            client.conn.send(send_length)
-            client.conn.send(message)
+            if client.conn != conn:
+                client.conn.send(send_length)
+                client.conn.send(message)
 
     def close_server(self):
         self.online = False

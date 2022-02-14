@@ -56,14 +56,17 @@ class Client:
         if message['id'] == 'player_id':
             self.id = message['data']
 
-        elif message['id'] == 'player':
-            self.s.personal_message(self.conn, self.id)
-
         elif message['id'] == 'load_maze':
             print('labirinto recebido')
             self.g.maze_list = message['data']
             self.g.update_maze()
             print('[CLIENTE] Labirinto recebido')
+
+        elif message['id'] == 'player_position': #continuar aqui
+            print(message)
+            # for player in self.g.players:
+            #     pass
+
         else:
             print(f'[CLIENTE] ERRO: id de msgm recebida não identificada. Mensagem: {message}')
         # except:
