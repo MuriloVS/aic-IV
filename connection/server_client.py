@@ -9,9 +9,10 @@ from util.config import *
 class ServerClient:
 
     # Inicializa a instância do cliente no server
-    def __init__(self, server, conn, id):
+    def __init__(self, server, conn, id, maze_list):
 
         self.id = id
+        self.maze_list = maze_list
 
         # Armazena a referência ao servidor para realizar comunicação
         self.s = server
@@ -22,6 +23,8 @@ class ServerClient:
         # Define cliente como online para loop principal
         self.clientOnline = True
 
+        print(f'[SERVIDOR] Nova conexão: Player {self.id}')
+
         # Enviando mensagem com ID do player
         message = {'id': 'player_id',
                    'data': self.id
@@ -30,13 +33,12 @@ class ServerClient:
 
         if (self.id > 1):
             message = {'id': 'load_maze',
-                    'data': self.s.maze
+                    'data': self.maze_list.value
                     }
             self.s.personal_message(self.conn, message)
 
     # Aguarda o recebimento de uma mensagem do cliente
     def start(self):
-        
         # Enquanto o cliente estiver online recebe mensagem dele
         while self.clientOnline and self.s.online:
             try:
@@ -65,11 +67,11 @@ class ServerClient:
             self.s.personal_message(self.conn, self.id)
 
         elif message['id'] == 'load_maze':
-            self.s.maze = message['data']
+            self.maze_list.value = message['data']
 
         elif message['id'] == 'get_maze':
             msg = {'id': 'load_maze',
-                       'data': self.s.maze
+                       'data': self.maze_list.value
                       }
             self.s.personal_message(self.conn, msg)
         

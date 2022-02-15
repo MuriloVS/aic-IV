@@ -1,9 +1,9 @@
 import time
 import socket
 import threading
+from multiprocessing import Manager
 import pickle
 
-import util.tools as tool
 from connection.server_client import ServerClient
 from util.config import LOCALHOST, PORT
 
@@ -24,7 +24,9 @@ class Server():
 
         self.clients = []
         self.playerID = 1
-        self.maze = []
+
+        manenger = Manager()
+        self.maze_list = manenger.Value(typecode=list, value=[])
 
         self.online = True
 
@@ -36,7 +38,7 @@ class Server():
                 client, address = self.s.accept()
 
                 # print(f'[NOVA CONEXÃO] Player {self.playerID}')
-                c = ServerClient(self, client, self.playerID)
+                c = ServerClient(self, client, self.playerID, self.maze_list)
                 self.clients.append(c)
 
                 # Cria thread para receber msgns do cliente
@@ -53,7 +55,7 @@ class Server():
         # Remova usuário das listas de clientes conectados
         self.clients.remove(client)
 
-        # print(f'[DESCONEXÃO] Player {client.id}')
+        print(f'[SERVIDOR] DESCONEXÃO: Player {client.id}')
 
         # Encerra socket do cliente
         client.conn.close()

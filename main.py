@@ -1,5 +1,5 @@
 import pygame as pg
-from game import Game
+from multiplayer_host import Game
 
 from util.config import *
 

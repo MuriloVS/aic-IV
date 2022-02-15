@@ -33,7 +33,7 @@ class Client:
                 if msg_lenght: # se tam for recebido
                     msg_lenght = int(msg_lenght) # armazena valor em int
                     msg = pickle.loads(self.conn.recv(msg_lenght))
-                    #print(f'[CLIENTE] Mensagem recebida {msg}')
+                    # print(f'[PLAYER] Mensagem recebida: {msg}')
 
                     # Chama função para lidar com mensagem
                     self.handle_msg(msg)
@@ -43,16 +43,6 @@ class Client:
                 # seta cliente como offline
                 self.online = False
 
-    def send_message(self, message):
-        try:
-            msg = pickle.dumps(message)
-            send_length = pickle.dumps(len(msg))
-
-            self.conn.send(send_length)
-            self.conn.send(msg)
-        except:
-            pass
-
     # Lida com mensagem recebida
     def handle_msg(self, message):
         # try:
@@ -60,10 +50,8 @@ class Client:
             self.id = message['data']
 
         elif message['id'] == 'load_maze':
-            print('labirinto recebido')
-            self.game.maze_list = message['data']
-            self.game.update_maze()
-            print('[CLIENTE] Labirinto recebido')
+            maze_list = message['data']
+            self.game.update_maze(maze_list)
 
         elif message['id'] == 'player_position':
             pos_x = message['data']['x']
@@ -74,6 +62,18 @@ class Client:
             print(f'[CLIENTE] ERRO: id de msgm recebida não identificada. Mensagem: {message}')
         # except:
         # print(f'ERRO HANDLE MSG: {message}')
+
+    def send_message(self, message):
+        try:
+            # print('[PLAYER] Enviando msg: ', message['id'])
+            msg = pickle.dumps(message)
+            send_length = pickle.dumps(len(msg))
+
+            self.conn.send(send_length)
+            self.conn.send(msg)
+
+        except:
+            pass
 
     def desconnect(self):
         self.conn.close()
