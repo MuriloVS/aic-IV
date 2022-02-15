@@ -11,7 +11,7 @@ class Client:
     def __init__(self, game, address, port):
 
         self.id = 0
-        self.g = game
+        self.game = game
 
         # Define família e tipo da conexão (AF_INET -> IPV4 | SOCK_STREAM -> TCP)
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -44,11 +44,14 @@ class Client:
                 self.online = False
 
     def send_message(self, message):
-        msg = pickle.dumps(message)
-        send_length = pickle.dumps(len(msg))
+        try:
+            msg = pickle.dumps(message)
+            send_length = pickle.dumps(len(msg))
 
-        self.conn.send(send_length)
-        self.conn.send(msg)
+            self.conn.send(send_length)
+            self.conn.send(msg)
+        except:
+            pass
 
     # Lida com mensagem recebida
     def handle_msg(self, message):
@@ -58,14 +61,14 @@ class Client:
 
         elif message['id'] == 'load_maze':
             print('labirinto recebido')
-            self.g.maze_list = message['data']
-            self.g.update_maze()
+            self.game.maze_list = message['data']
+            self.game.update_maze()
             print('[CLIENTE] Labirinto recebido')
 
-        elif message['id'] == 'player_position': #continuar aqui
-            print(message)
-            # for player in self.g.players:
-            #     pass
+        elif message['id'] == 'player_position':
+            pos_x = message['data']['x']
+            pos_y = message['data']['y']
+            self.game.player2.move(pos_x, pos_y)
 
         else:
             print(f'[CLIENTE] ERRO: id de msgm recebida não identificada. Mensagem: {message}')

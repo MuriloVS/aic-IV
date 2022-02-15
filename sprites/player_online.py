@@ -9,17 +9,18 @@ vector = pg.math.Vector2
 
 
 class PlayerOnline(pg.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, client):
+    def __init__(self, game, client, pos_x, pos_y):
         pg.sprite.Sprite.__init__(self)
 
+        self.game = game
         self.client = client
 
         path = Path("media", "images", "tv.png")
         self.image = pg.image.load(path).convert()
         self.rect = self.image.get_rect()
 
-        self.rect.midbottom = (pos_x, pos_y)
-        self.pos = vector(self.rect.midbottom)
+        self.rect.center = (pos_x, pos_y)
+        self.pos = vector(self.rect.center)
         self.vel = vector(0, 0)
         self.acc = vector(0, 0)
         self.x = pos_x
@@ -112,8 +113,8 @@ class PlayerOnline(pg.sprite.Sprite):
         message = {'id': 'player_position',
                    'data': {
                        'player_id': self.client.id,
-                       'x': self.pos.x,
-                       'y': self.pos.y
+                       'x': self.pos.x - self.game.compass.x ,
+                       'y': self.pos.y - self.game.compass.y
                            }
                    }
 

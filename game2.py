@@ -110,15 +110,9 @@ class Game():
             self.TClient = Thread(target=self.client.receive_message)
             self.TClient.start()
 
-            # envia o labirinto ao servidor
-            # self.maze_list = []
-            # message = {'id': 'get_maze'}
-            # self.client.send_message(message)
-            # espera receber o labirinto do servidor
-
             # geração das posições dos player
-            self.player = PlayerOnline(MIDSCREEN_X, MIDSCREEN_Y, self.client)
-            self.player2 = PlayerGuest(MIDSCREEN_X, MIDSCREEN_Y) #continuar aqui
+            self.player = PlayerOnline(self, self.client, MIDSCREEN_X, MIDSCREEN_Y)
+            #self.player2 = PlayerGuest(MIDSCREEN_X, MIDSCREEN_Y) #continuar aqui
             self.players.add(self.player)
 
             # self.play_music()

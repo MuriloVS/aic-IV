@@ -1,4 +1,3 @@
-import time
 from threading import Thread
 import pygame as pg
 from pathlib import Path
@@ -16,6 +15,7 @@ from util.maze import Maze
 from util.config import *
 
 vector = pg.math.Vector2
+
 
 class Game():
 
@@ -80,8 +80,8 @@ class Game():
 
     def update(self):
         self.walls.update()
-
-        self.players.update(self.walls)
+        self.players.update()
+        self.player.update(self.walls)
 
     def draw(self):
         self.window.fill((150, 200, 145))
@@ -89,59 +89,50 @@ class Game():
         # desenha todos os objetos na tela
         self.walls.draw(self.window)
 
-        # self.players.draw(self.window)
-        self.window.blit((self.player.image),
-                         (self.player.rect))  # não necessário
+        self.players.draw(self.window)
+        self.window.blit((self.player.image), (self.player.rect))
 
     def load_scene(self, scene=MENU_PRINCIPAL, **kwargs):
         self.scene = scene
         self.walls.empty()
         self.players.empty()
 
-        if self.scene == MENU_PRINCIPAL:
-            self.menu_incial.display_menu()
+        # criando servidor multiplayer
+        self.server = Server()
+        self.TServer = Thread(target=self.server.subscribe)
+        self.TServer.start()
 
-        elif self.scene == LOBBY:
-            pass
+        # criando cliente para conectar no servidor
+        self.client = Client(self, LOCALHOST, PORT)
+        self.TClient = Thread(target=self.client.receive_message)
+        self.TClient.start()
 
-        elif self.scene == MAZE:
-            # criando servidor multiplayer
-            self.server = Server()
-            self.TServer = Thread(target=self.server.subscribe)
-            self.TServer.start()
+        # lobby
 
-            # criando cliente para conectar no servidor
-            self.client = Client(self, LOCALHOST, PORT)
-            self.TClient = Thread(target=self.client.receive_message)
-            self.TClient.start()
+        # envia o labirinto ao servidor
+        self.maze_list = generate_maze_list(level=2, dimension=0, numPlayers=2)
+        self.maze = generate_walls_sprites_group(self.maze_list)
+        message = {'id': 'load_maze',
+                    'data': self.maze_list
+                    }
+        self.client.send_message(message)
 
-            # lobby
+        # geração das posições dos player
 
-            # envia o labirinto ao servidor
-            self.maze_list = generate_maze_list(level=2, dimension=0, numPlayers=2)
-            self.maze = generate_walls_sprites_group(self.maze_list)
-            message = {'id': 'load_maze',
-                       'data': self.maze_list
-                      }
-            self.client.send_message(message)
 
-            # geração das posições dos player
+        # geração dos jogadores convidados
+        self.player2 = PlayerGuest(self, 2, MIDSCREEN_X, MIDSCREEN_Y)
+        self.players.add(self.player2)
 
-            # gerações do player 1 e guests
-            self.player = PlayerOnline(MIDSCREEN_X, MIDSCREEN_Y, self.client)
-            self.players.add(self.player)
+        # gerações do player 1 e guests
+        self.player = PlayerOnline(self, self.client, MIDSCREEN_X, MIDSCREEN_Y)
+        
 
-            # adicionando sprites aos grupos
-            for wall in self.maze:
-                self.walls.add(wall)
+        # adicionando sprites aos grupos
+        for wall in self.maze:
+            self.walls.add(wall)
 
-            # self.play_music()
-
-        elif self.scene == PAUSE:
-            pass
-
-        elif self.scene == GAME_OVER:
-            pass
+        # self.play_music()
 
     def move_camera(self):
         # ao atingir os limites inferiores e superiores
@@ -152,11 +143,15 @@ class Game():
         if self.player.rect.top <= SCREENHEIGHT * (1/3):
             self.player.pos.y += move
             self.compass.y += move
+            for player in self.players:
+                player.rect.y += move
             for elem in self.walls:
                 elem.rect.y += move
         elif self.player.rect.bottom >= SCREENHEIGHT * (2/3):
             self.player.pos.y -= move
             self.compass.y -= move
+            for player in self.players:
+                player.rect.y -= move            
             for elem in self.walls:
                 elem.rect.y -= move
 
@@ -165,12 +160,16 @@ class Game():
         if self.player.rect.left <= SCREENWIDTH * (1/3):
             self.player.pos.x += move
             self.compass.x += move
+            for player in self.players:
+                player.rect.x += move            
             for elem in self.walls:
                 elem.rect.x += move
 
         elif self.player.rect.right >= SCREENWIDTH * (2/3):
             self.player.pos.x -= move
             self.compass.x -= move
+            for player in self.players:
+                player.rect.x -= move                 
             for elem in self.walls:
                 elem.rect.x -= move
 
