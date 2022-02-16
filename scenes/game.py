@@ -5,7 +5,7 @@ from math import ceil
 # from scenes.menu_inicial import MenuInicial
 # from scenes.options import OptionsMenu
 # from scenes.credits import CreditsMenu
-
+from sprites.player import Player
 from util.maze_copy import Maze
 from util.config import *
 
@@ -98,8 +98,8 @@ class Game():
 
         # geração das posições dos player
 
-        # gerações do player 1 e guests
-        #self.player = PlayerOnline(self, self.client, MIDSCREEN_X, MIDSCREEN_Y)
+        # gerações do player 1
+        self.player = Player(self, MIDSCREEN_X, MIDSCREEN_Y)
 
         self.play_music()
 
