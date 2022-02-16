@@ -1,5 +1,5 @@
 import pygame as pg
-from multiplayer_guest import Game
+from scenes.game_multiplayer_guest import GameMultiplayerGuest
 
 from util.config import *
 
@@ -11,8 +11,8 @@ if __name__ == '__main__':
     #window = pg.display.set_mode((SCREENWIDTH, SCREENHEIGHT), pg.FULLSCREEN)
     window = pg.display.set_mode((SCREENWIDTH, SCREENHEIGHT), pg.RESIZABLE)
 
-    g = Game(window)
+    g = GameMultiplayerGuest(window)
     
-    g.load_scene(MAZE)
+    g.load()
     #g.load_scene(MENU_PRINCIPAL)
     g.loop()

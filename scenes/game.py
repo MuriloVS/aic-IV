@@ -1,17 +1,11 @@
-from threading import Thread
-import time
 import pygame as pg
 from pathlib import Path
 from math import ceil
 
-from connection.server import Server
-from connection.client import Client
 # from scenes.menu_inicial import MenuInicial
 # from scenes.options import OptionsMenu
 # from scenes.credits import CreditsMenu
-from sprites.player_online import PlayerOnline
-from sprites.player_guest import PlayerGuest
-from util.tools import generate_maze_list, generate_walls_sprites_group
+
 from util.maze_copy import Maze
 from util.config import *
 
@@ -36,13 +30,11 @@ class Game():
         # bússola para controlar posição dos objetos
         self.compass = vector(0, 0)
 
-        self.walls_list = []
-
         # self.menu_incial = MenuInicial(self)
         # self.options = OptionsMenu(self)
         # self.credits = CreditsMenu(self)
-        self.lobby = ''
-        self.carregamento = ''
+        # self.lobby = ''
+        # self.carregamento = ''
 
         self.run = True
         self.play = False
@@ -60,8 +52,6 @@ class Game():
             pg.display.flip()
 
         pg.quit()
-        self.client.desconnect()
-        self.server.close_server()
 
     def event_check(self):
         global SCREENWIDTH, SCREENHEIGHT
@@ -81,7 +71,6 @@ class Game():
 
     def update(self):
         self.walls.update()
-        self.players.update()
         self.player.update(self.walls)
 
     def draw(self):
@@ -90,50 +79,27 @@ class Game():
         # desenha todos os objetos na tela
         self.walls.draw(self.window)
 
-        self.players.draw(self.window)
         self.window.blit((self.player.image), (self.player.rect))
 
-    def load_scene(self, scene=MENU_PRINCIPAL):
-        self.scene = scene
+    def load(self):
         self.walls.empty()
         self.players.empty()
 
-        # criando servidor multiplayer
-        self.server = Server()
-        self.TServer = Thread(target=self.server.subscribe)
-        self.TServer.start()
+        # recebe nível
 
-        # criando cliente para conectar no servidor
-        self.client = Client(self, LOCALHOST, PORT)
-        self.TClient = Thread(target=self.client.receive_message)
-        self.TClient.start()
-        time.sleep(1)
-        # lobby
-
-        # envia o labirinto ao servidor
+        # cria o labirinto
         self.maze = Maze(level=2, numPlayers=2)
         self.maze.build()
         self.maze.build_walls_sprites()
-        self.walls_list = self.maze.get_walls_list()
-        message = {'id': 'load_maze',
-                    'data': self.walls_list
-                    }
-        self.client.send_message(message)
-
-        # geração das posições dos player
-
-
-        # geração dos jogadores convidados
-        self.player2 = PlayerGuest(self, 2, MIDSCREEN_X, MIDSCREEN_Y)
-        self.players.add(self.player2)
-
-        # gerações do player 1 e guests
-        self.player = PlayerOnline(self, self.client, MIDSCREEN_X, MIDSCREEN_Y)
-        
 
         # adicionando sprites aos grupos
         for wall in self.maze.walls:
             self.walls.add(wall)
+
+        # geração das posições dos player
+
+        # gerações do player 1 e guests
+        #self.player = PlayerOnline(self, self.client, MIDSCREEN_X, MIDSCREEN_Y)
 
         self.play_music()
 
