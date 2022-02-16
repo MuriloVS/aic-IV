@@ -1,5 +1,3 @@
-import pygame as pg
-from pathlib import Path
 import random
 
 from sprites.wall import Wall
@@ -26,13 +24,13 @@ class Spot:
 
 
 class Maze():
-    def __init__(self, level=10, numPlayers=1):
+    def __init__(self, level=10, dimension=False, numPlayers=1):
 
         self.level = level
         self.numPlayers = numPlayers
 
-        self.rows = level*6
-        self.cols = level*6
+        self.rows = level*6+1
+        self.cols = level*6+1
 
         self.completed = False
         self.walls = []
@@ -91,3 +89,44 @@ class Maze():
         if a.x == b.x and a.y > b.y:
             self.grid[a.x][a.y].walls[0] = False
             self.grid[b.x][b.y].walls[2] = False
+
+    def get_walls_list(self):
+        walls_list = []
+
+        for i in range(self.rows): # continuar aqui rever final lab
+            walls_list.append([])
+            for j in range(self.cols):
+                walls_list[i].append(self.grid[i][j].walls)
+
+        return walls_list        
+
+    def build_walls_sprites(self):
+        size = 100
+        self.walls.clear()
+
+        for i in range(len(self.grid[0])): # continuar aqui rever final lab
+            for j in range(len(self.grid[1])):
+
+                # parede superior
+                if self.grid[i][j].walls[0] == True and j % 2 == 0:
+                    pos = [i*size + size/2, j*size]
+                    w = Wall(pos=pos, size=size, orientacao=0)
+                    self.walls.append(w)
+
+                # parede direita
+                if self.grid[i][j].walls[1] == True and i % 2 == 0:
+                    pos = [i*size + size, j*size + size/2]
+                    w = Wall(pos=pos, size=size, orientacao=1)
+                    self.walls.append(w)
+
+                # parede inferior
+                if self.grid[i][j].walls[2] == True and j % 2 == 0:
+                    pos = [i*size + size/2, j*size+size]
+                    w = Wall(pos=pos, size=size, orientacao=0)
+                    self.walls.append(w)
+
+                # parede esquerda
+                if self.grid[i][j].walls[3] == True and i % 2 == 0:
+                    pos = [i*size, j*size+size/2]
+                    w = Wall(pos=pos, size=size, orientacao=1)
+                    self.walls.append(w)

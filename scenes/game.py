@@ -6,7 +6,7 @@ from math import ceil
 # from scenes.options import OptionsMenu
 # from scenes.credits import CreditsMenu
 from sprites.player import Player
-from util.maze_copy import Maze
+from util.maze import Maze
 from util.config import *
 
 vector = pg.math.Vector2
