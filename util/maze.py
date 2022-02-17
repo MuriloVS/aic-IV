@@ -24,7 +24,7 @@ class Spot:
 
 
 class Maze():
-    def __init__(self, level=10, dimension=False, numPlayers=1):
+    def __init__(self, level=10, numPlayers=1):
 
         self.level = level
         self.numPlayers = numPlayers
@@ -130,3 +130,6 @@ class Maze():
                     pos = [i*size, j*size+size/2]
                     w = Wall(pos=pos, size=size, orientacao=1)
                     self.walls.append(w)
+
+    def get_player_position(self):
+        pass

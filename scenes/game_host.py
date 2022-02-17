@@ -19,23 +19,7 @@ class GameMultiplayerHost(Game):
     def loop(self):
         super().loop()
         self.client.desconnect()
-        self.server.close_server()
-
-    # def event_check(self):
-    #     global SCREENWIDTH, SCREENHEIGHT
-    #     for event in pg.event.get():
-    #         if event.type == pg.KEYDOWN:
-    #             if event.key == pg.K_ESCAPE:
-    #                 self.run = False
-    #                 self.play = False      
-    #         if event.type == pg.QUIT:
-    #             self.run = False
-    #             self.play = False
-                
-    #         if event.type == pg.VIDEORESIZE:
-    #             SCREENWIDTH = event.w
-    #             SCREENHEIGHT = event.h
-    #             self.window = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)                 
+        self.server.close_server()               
 
     def update(self):
         self.walls.update()

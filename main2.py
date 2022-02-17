@@ -1,6 +1,6 @@
 import pygame as pg
-from scenes.game_multiplayer_guest import GameMultiplayerGuest
 
+from scenes.game_guest import GameMultiplayerGuest
 from util.config import *
 
 

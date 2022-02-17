@@ -1,7 +1,8 @@
 import pygame as pg
-from scenes.game import Game
-from scenes.game_multiplayer_host import  GameMultiplayerHost
 
+from scenes.main_menu import MainMenu
+from scenes.game import Game
+from scenes.game_host import  GameMultiplayerHost
 from util.config import *
 
 
@@ -12,7 +13,8 @@ if __name__ == '__main__':
     #window = pg.display.set_mode((SCREENWIDTH, SCREENHEIGHT), pg.FULLSCREEN)
     window = pg.display.set_mode((SCREENWIDTH, SCREENHEIGHT), pg.RESIZABLE)
 
-    g = GameMultiplayerHost(window)
+    #g = GameMultiplayerHost(window)
+    g = MainMenu(window)
     
     g.load()
     #g.load_scene(MENU_PRINCIPAL)
