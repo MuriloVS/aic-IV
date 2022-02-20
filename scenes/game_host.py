@@ -61,18 +61,25 @@ class GameMultiplayerHost(Game):
         # adicionando sprites do lab ao seu grupo
         for wall in self.maze.walls:
             self.walls.add(wall)
+        
+        # recebendo posição inicial do player
+        x, y = self.maze.get_player_position()
 
         # enviando lab ao servidor
-        message = {'id': 'load_maze', 'data': self.maze.get_walls_list()}
+        message = {'id': 'load_maze', 'data': {
+                                                'list': self.maze.get_walls_list(),
+                                                'position': (x, y)
+                                              }
+        }      
         self.client.send_message(message)
 
-        # geração das posições dos player
-
         # geração dos jogadores convidados
-        self.player2 = PlayerGuest(self, 2, MIDSCREEN_X, MIDSCREEN_Y)
+        self.player2 = PlayerGuest(self, 2, x, y)
         self.players.add(self.player2)
 
         # gerações do player atual
-        self.player = PlayerOnline(self, self.client, MIDSCREEN_X, MIDSCREEN_Y)
+        self.player = PlayerOnline(self, self.client, x, y)
+
+        self.set_camera_position(x, y)
 
         self.play_music()

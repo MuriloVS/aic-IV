@@ -28,13 +28,13 @@ class Player(pg.sprite.Sprite):
         key = pg.key.get_pressed()
 
         # movimento
-        if key[pg.K_LEFT]:
+        if self.game.actions['left']:
             self.acc.x = -PLAYER_ACC
-        if key[pg.K_RIGHT]:
+        if self.game.actions['right']:
             self.acc.x = PLAYER_ACC
-        if key[pg.K_DOWN]:
+        if self.game.actions['down']:
             self.acc.y = PLAYER_ACC
-        if key[pg.K_UP]:
+        if self.game.actions['up']:
             self.acc.y = -PLAYER_ACC
 
         # equações para movimento

@@ -13,9 +13,10 @@ if __name__ == '__main__':
     #window = pg.display.set_mode((SCREENWIDTH, SCREENHEIGHT), pg.FULLSCREEN)
     window = pg.display.set_mode((SCREENWIDTH, SCREENHEIGHT), pg.RESIZABLE)
 
-    #g = GameMultiplayerHost(window)
-    g = MainMenu(window)
-    
-    g.load()
-    #g.load_scene(MENU_PRINCIPAL)
-    g.loop()
+    g = GameMultiplayerHost(window)
+    #g = MainMenu(window)
+
+    while g.run:
+        g.load()
+        #g.load_scene(MENU_PRINCIPAL)
+        g.loop()

@@ -27,6 +27,7 @@ class Server():
 
         manenger = Manager()
         self.maze_list = manenger.Value(typecode=list, value=[])
+        self.initial_player_position = manenger.Value(typecode=tuple, value=(0, 0))
 
         self.online = True
 

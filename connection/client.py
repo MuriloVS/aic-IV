@@ -50,13 +50,20 @@ class Client:
             self.id = message['data']
 
         elif message['id'] == 'load_maze':
-            maze_list = message['data']
+            maze_list = message['data']['list']
             self.game.update_maze(maze_list)
+            position = message['data']['position']
+            self.game.set_camera_position(position[0], position[1])
 
         elif message['id'] == 'player_position':
             pos_x = message['data']['x']
             pos_y = message['data']['y']
             self.game.player2.move(pos_x, pos_y)
+
+        elif message['id'] == 'initial_position':
+            pos_x = message['data']['x']
+            pos_y = message['data']['y']
+            self.game.player2.move(pos_x, pos_y)            
 
         else:
             print(f'[CLIENTE] ERRO: id de msgm recebida não identificada. Mensagem: {message}')

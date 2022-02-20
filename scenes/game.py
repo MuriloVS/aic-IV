@@ -19,7 +19,6 @@ class Game():
         self.window = window
         self.rect = self.window.get_rect()
         self.rect.center = (SCREENWIDTH/2, SCREENHEIGHT/2)
-
         pg.display.set_caption(TITLE)
 
         self.clock = pg.time.Clock()
@@ -30,6 +29,7 @@ class Game():
         # bússola para controlar posição dos objetos
         self.compass = vector(0, 0)
 
+        self.actions = {"left": False, "right": False, "up" : False, "down" : False, "action1" : False, "action2" : False, "start" : False}
         # self.menu_incial = MenuInicial(self)
         # self.options = OptionsMenu(self)
         # self.credits = CreditsMenu(self)
@@ -59,7 +59,39 @@ class Game():
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.run = False
-                    self.play = False      
+                    self.play = False  
+
+                if event.key == pg.K_a:
+                    self.actions['left'] = True
+                if event.key == pg.K_d:
+                    self.actions['right'] = True
+                if event.key == pg.K_w:
+                    self.actions['up'] = True
+                if event.key == pg.K_s:
+                    self.actions['down'] = True
+                if event.key == pg.K_p:
+                    self.actions['action1'] = True
+                if event.key == pg.K_o:
+                    self.actions['action2'] = True    
+                if event.key == pg.K_RETURN:
+                    self.actions['start'] = True  
+
+            if event.type == pg.KEYUP:
+                if event.key == pg.K_a:
+                    self.actions['left'] = False
+                if event.key == pg.K_d:
+                    self.actions['right'] = False
+                if event.key == pg.K_w:
+                    self.actions['up'] = False
+                if event.key == pg.K_s:
+                    self.actions['down'] = False
+                if event.key == pg.K_p:
+                    self.actions['action1'] = False
+                if event.key == pg.K_o:
+                    self.actions['action2'] = False
+                if event.key == pg.K_RETURN:
+                    self.actions['start'] = False   
+
             if event.type == pg.QUIT:
                 self.run = False
                 self.play = False
@@ -142,6 +174,16 @@ class Game():
             for elem in self.walls:
                 elem.rect.x -= move
 
+    def set_camera_position(self, pos_x, pos_y):
+        self.compass.x -= pos_x - SCREENWIDTH / 2
+        self.compass.y -= pos_y - SCREENHEIGHT / 2
+        for player in self.players:
+            player.rect.x += self.compass.x      
+            player.rect.y += self.compass.y
+        for elem in self.walls:
+            elem.rect.x += self.compass.x
+            elem.rect.y += self.compass.y 
+
     def draw_text(self, text, size, x, y, font=pg.font.get_default_font()):
         font = pg.font.Font(font,size)
         text_surface = font.render(text, True, WHITE)
@@ -149,9 +191,8 @@ class Game():
         text_rect.center = (x,y)
         self.window.blit(text_surface,text_rect)
 
-    def play_music(self):
-        # podemos passar um parâmetro no método para quando tivermos outras músicas (intro, gameplay)
-        path = Path('media', 'music', 'music_intro.wav')
+    def play_music(self, music='music_intro.wav', volume=0.15, loops=-1): # continuar aqui
+        path = Path('media', 'music', music)
         self.intro_music = pg.mixer.Sound(path)
-        self.intro_music.set_volume(0.15)
-        self.intro_music.play(loops=-1)
+        self.intro_music.set_volume(volume)
+        self.intro_music.play(loops)

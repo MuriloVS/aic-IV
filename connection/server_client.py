@@ -75,5 +75,8 @@ class ServerClient:
                       }
             self.s.personal_message(self.conn, msg)
         
+        if message['id'] == 'initial_position':
+            self.s.broadcast(self.conn, message) 
+
         # except:
         # print(f'ERRO HANDLE MSG: {message}')

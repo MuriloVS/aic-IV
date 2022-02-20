@@ -12,10 +12,10 @@ class MainMenu(pg_menu.Menu):
         self.run = False
 
     def load(self):
-        self.add.button('Singleplayer', self.start_the_game)
-        self.add.button('Multiplayer', self.start_the_game)
-        self.add.button('Opções', self.start_the_game)
-        self.add.button('Sobre', self.start_the_game)
+        self.add.button('Singleplayer', self.start_singleplayer)
+        self.add.button('Multiplayer', self.start_multiplayer)
+        self.add.button('Opções')
+        self.add.button('Sobre')
         self.add.button('Sair', pg_menu.events.EXIT)
 
         # self.add.dropselect('Nível', [('Hard', 1), ('Easy', 2)])
@@ -33,9 +33,13 @@ class MainMenu(pg_menu.Menu):
         print(value, difficulty)
         pass
 
-    def start_the_game(self):
+    def start_singleplayer(self):
         # Do the job here !
         pass
+
+    def start_multiplayer(self):
+        # Do the job here !
+        pass    
 
 if __name__ == '__main__':
 
