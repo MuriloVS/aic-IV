@@ -49,7 +49,6 @@ class GameSingleplayer:
             if event.type == pg.QUIT:
                 self.run = False
                 self.play = False
-                pg.quit()
                 
             if event.type == pg.VIDEORESIZE:
                 SCREENWIDTH = event.w

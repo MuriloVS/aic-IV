@@ -18,7 +18,6 @@ class Menu(pg_menu.Menu):
             for event in events:
                 if event.type == pg.QUIT:
                     exit()
-
             if self.is_enabled():
                 self.update(events)
                 self.draw(self.window, True)
@@ -33,7 +32,10 @@ class MainMenu(Menu):
 
         self.options = Options(game, self.window)
         self.credits = Credits(game, self.window)
-
+        
+        pg_menu.Menu.in_submenu(self, self.options)
+        pg_menu.Menu.in_submenu(self, self.credits)
+        
         self.run = False
 
     def load(self):
@@ -41,7 +43,7 @@ class MainMenu(Menu):
 
         self.add.button('Singleplayer', self.start_singleplayer)
         self.add.button('Multiplayer', self.start_menu_multiplayer)
-        self.add.button('Opções')
+        self.add.button('Opções', self.start_options)
         self.add.button('Sobre')
         self.add.button('Sair', pg_menu.events.EXIT)
 
@@ -55,10 +57,9 @@ class MainMenu(Menu):
         self.game.play = True
         self.run = False 
 
-    # def start_option(self): # continuar aqui
-    #     pg_menu.Menu.in_submenu()
-    #     self.game.currentScene = self.options
-    #     self.run = False   
+    def start_options(self): # continuar aqui
+        self.game.currentScene = self.options
+        self.run = False   
 
 
 class Options(Menu):
@@ -69,6 +70,9 @@ class Options(Menu):
 
     def load(self):
         self.clear(True)
+
+        self.add.text_input('Name :', default='John Doe', font=pg_menu.font.FONT_COMIC_NEUE)
+        self.add.selector('Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=self.set_difficulty)
 
     def set_difficulty(self, value, difficulty):
         print(value, difficulty)
@@ -84,9 +88,6 @@ class Credits(Menu):
         self.clear(True)
 
         # continuar aqui
-        self.add.text_input('Name :', default='John Doe', font=pg_menu.font.FONT_COMIC_NEUE)
-        self.add.selector('Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=self.set_difficulty)
-
 
 
 if __name__ == '__main__':

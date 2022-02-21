@@ -85,4 +85,4 @@ class GameMultiplayerHost(GameSingleplayer):
 
         self.set_camera_position(x, y)
 
-        self.play_music()
+        self.g.play_music()
