@@ -93,7 +93,7 @@ class Maze():
     def get_walls_list(self):
         walls_list = []
 
-        for i in range(self.rows): # continuar aqui rever final lab
+        for i in range(self.rows):
             walls_list.append([])
             for j in range(self.cols):
                 walls_list[i].append(self.grid[i][j].walls)
@@ -103,7 +103,7 @@ class Maze():
     def build_walls_sprites(self):
         self.walls.clear()
 
-        for i in range(len(self.grid[0])): # continuar aqui rever final lab
+        for i in range(len(self.grid[0])):
             for j in range(len(self.grid[1])):
 
                 # parede superior

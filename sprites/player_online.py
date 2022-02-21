@@ -7,7 +7,7 @@ vector = pg.math.Vector2
 
 
 class PlayerOnline(Player):
-    def __init__(self, game, client, pos_x, pos_y):
+    def __init__(self, game, client, pos_x=MIDSCREEN_X, pos_y=MIDSCREEN_Y):
         super().__init__(game, pos_x, pos_y)
 
         self.client = client

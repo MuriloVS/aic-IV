@@ -2,19 +2,20 @@ from threading import Thread
 import pygame as pg
 import time
 
-from scenes.game import *
+from scenes.game_singleplayer import GameSingleplayer
 from sprites.player_online import PlayerOnline
 from sprites.player_guest import PlayerGuest
 from connection.client import Client
 from util.tools import generate_walls_sprites_group
+from util.config import *
 
 vector = pg.math.Vector2
 
 
-class GameMultiplayerGuest(Game):
+class GameMultiplayerGuest(GameSingleplayer):
 
-    def __init__(self, window: pg.display):
-        super().__init__(window)
+    def __init__(self, game, window: pg.display):
+        super().__init__(game, window)
 
     def loop(self):
         super().loop()
@@ -51,7 +52,7 @@ class GameMultiplayerGuest(Game):
         # self.players.add(self.player)
 
         # criação do player atual
-        self.player = PlayerOnline(self, self.client, MIDSCREEN_X, MIDSCREEN_Y)
+        self.player = PlayerOnline(self, self.client)
 
         self.play_music()
 

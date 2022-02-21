@@ -2,24 +2,27 @@ from threading import Thread
 import pygame as pg
 import time
 
-from scenes.game import *
+from scenes.game_singleplayer import GameSingleplayer
 from sprites.player_online import PlayerOnline
 from sprites.player_guest import PlayerGuest
 from connection.server import Server
 from connection.client import Client
+from util.maze import Maze
+from util.config import *
 
 vector = pg.math.Vector2
 
 
-class GameMultiplayerHost(Game):
+class GameMultiplayerHost(GameSingleplayer):
 
-    def __init__(self, window: pg.display):
-        super().__init__(window)
+    def __init__(self, game, window: pg.display):
+        super().__init__(game, window)
 
     def loop(self):
         super().loop()
         self.client.desconnect()
-        self.server.close_server()               
+        self.server.close_server()              
+        self.g.currentScene = self.g.menuInicial
 
     def update(self):
         self.walls.update()
@@ -74,11 +77,11 @@ class GameMultiplayerHost(Game):
         self.client.send_message(message)
 
         # geração dos jogadores convidados
-        self.player2 = PlayerGuest(self, 2, x, y)
+        self.player2 = PlayerGuest(self, 2)
         self.players.add(self.player2)
 
         # gerações do player atual
-        self.player = PlayerOnline(self, self.client, x, y)
+        self.player = PlayerOnline(self, self.client)
 
         self.set_camera_position(x, y)
 

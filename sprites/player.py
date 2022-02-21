@@ -7,7 +7,7 @@ vector = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, game, pos_x, pos_y):
+    def __init__(self, game, pos_x=MIDSCREEN_X, pos_y=MIDSCREEN_Y):
         pg.sprite.Sprite.__init__(self)
 
         self.game = game
@@ -25,7 +25,6 @@ class Player(pg.sprite.Sprite):
 
     def update(self, walls):
         self.acc = vector(0, 0)
-        key = pg.key.get_pressed()
 
         # movimento
         if self.game.actions['left']:
