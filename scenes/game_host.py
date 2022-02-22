@@ -2,7 +2,8 @@ from threading import Thread
 import pygame as pg
 import time
 
-from scenes.game_singleplayer import GameSingleplayer
+from scenes.game_base import GameBase
+from sprites.target import Target
 from sprites.player_online import PlayerOnline
 from sprites.player_guest import PlayerGuest
 from connection.server import Server
@@ -13,7 +14,7 @@ from util.config import *
 vector = pg.math.Vector2
 
 
-class GameMultiplayerHost(GameSingleplayer):
+class GameMultiplayerHost(GameBase):
 
     def __init__(self, game, window: pg.display):
         super().__init__(game, window)
@@ -29,19 +30,11 @@ class GameMultiplayerHost(GameSingleplayer):
         self.players.update()
         self.player.update(self.walls)
 
-    def draw(self):
-        self.window.fill((150, 200, 145))
-
-        # desenha todos os objetos na tela
-        self.walls.draw(self.window)
-
-        self.players.draw(self.window)
-        self.window.blit((self.player.image), (self.player.rect))
-
     def load(self, scene=MENU_PRINCIPAL):
-        self.scene = scene
-        self.walls.empty()
-        self.players.empty()
+        # carregano música
+        #self.music_file = None
+        #self.music = self.get_sound(self.music_file)
+        self.music = self.get_sound()
 
         # criando servidor multiplayer
         self.server = Server()
@@ -60,13 +53,12 @@ class GameMultiplayerHost(GameSingleplayer):
         self.maze = Maze(level=2, numPlayers=2)
         self.maze.build()
         self.maze.build_walls_sprites()
-        
-        # adicionando sprites do lab ao seu grupo
-        for wall in self.maze.walls:
-            self.walls.add(wall)
-        
         # recebendo posição inicial do player
-        x, y = self.maze.get_player_position()
+        x, y = self.maze.get_player_position()      
+
+        # cria linha de partida e chegada # continuar aqui
+        self.finish = Target(self, 0, 0, GREEN)
+        self.start = Target(self, self.maze.rows-1, self.maze.cols-1, RED)
 
         # enviando lab ao servidor
         message = {'id': 'load_maze', 'data': {
@@ -78,11 +70,17 @@ class GameMultiplayerHost(GameSingleplayer):
 
         # geração dos jogadores convidados
         self.player2 = PlayerGuest(self, 2)
-        self.players.add(self.player2)
 
         # gerações do player atual
         self.player = PlayerOnline(self, self.client)
 
+        # adicionando sprites aos grupos
+        self.players.add(self.player2)
+        self.scenario_dinamic.add(self.finish, self.start, self.player2)
+        for wall in self.maze.walls:
+            self.walls.add(wall)
+            self.scenario_dinamic.add(wall)
+
         self.set_camera_position(x, y)
 
-        self.g.play_music()
+        self.music.play(loops=-1)

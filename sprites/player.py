@@ -16,12 +16,16 @@ class Player(pg.sprite.Sprite):
         self.image = pg.image.load(path).convert()
         self.rect = self.image.get_rect()
 
+        # size = SIZE/3
+        # self.image = pg.surface.Surface((size, size))
+        # self.image = pg.surface.Surface.convert(self.image)
+        # self.image.set_colorkey(BLACK)
+        # self.rect = pg.draw.circle(self.image, (0, 100, 50), (size/2, size/2), size/2)
+
         self.rect.center = (pos_x, pos_y)
         self.pos = vector(self.rect.center)
         self.vel = vector(0, 0)
         self.acc = vector(0, 0)
-        self.x = pos_x
-        self.y = pos_y
 
     def update(self, walls):
         self.acc = vector(0, 0)
@@ -53,6 +57,7 @@ class Player(pg.sprite.Sprite):
 
         self.rect.center = self.pos  
 
+        #collides = False
         collides = pg.sprite.spritecollide(self, walls, False)
 
         if collides:

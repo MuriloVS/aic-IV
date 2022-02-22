@@ -1,4 +1,3 @@
-from re import X
 import pygame as pg
 from pathlib import Path
 
@@ -21,7 +20,7 @@ class Wall(pg.sprite.Sprite):
         self.size_y = size * 0.25
 
         # criando superfície
-        path = Path("media", "images", "tv.png")
+        #path = Path("media", "images", "tv.png")
         #self.image = pg.image.load(path).convert()
         self.image = pg.Surface((self.size_x, self.size_y))
         self.image.fill((45,45,45))
