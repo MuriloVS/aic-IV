@@ -1,5 +1,4 @@
 import pygame as pg
-from pathlib import Path
 
 from scenes.main_menu import MainMenu
 from scenes.game_singleplayer import GameSingleplayer
@@ -11,7 +10,6 @@ vector = pg.math.Vector2
 
 
 class Game:
-
     def __init__(self, window: pg.display):
 
         self.window = window
@@ -31,15 +29,10 @@ class Game:
         self.play = False
         self.run = True
 
-    def draw_text(self, text, size, x, y, font=pg.font.get_default_font()):
+    def draw_text(self, text, size, x, y, color=WHITE, font=pg.font.get_default_font()):
         font = pg.font.Font(font, size)
-        text_surface = font.render(text, True, WHITE)
+        text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
         text_rect.center = (x, y)
-        self.window.blit(text_surface, text_rect)
 
-    def play_music(self, music='music_intro.wav', volume=0.15, loops=-1):  # continuar aqui
-        path = Path('media', 'music', music)
-        self.intro_music = pg.mixer.Sound(path)
-        self.intro_music.set_volume(volume)
-        self.intro_music.play(loops)
+        self.window.blit(text_surface, text_rect)
