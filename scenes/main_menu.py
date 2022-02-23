@@ -110,13 +110,11 @@ class Credits(Menu):
         self.clear(True)
 
         self.add.label(
-            '''  Jogo desenvolvido por
-            Augusto Cardoso Setti e
-            Murilo Vitória da Silva
-            (há controvérsias) como tarefa
-            da disciplina de AIC IV,
-            do Curso de Engenharia de Computação,
-            entre 2021 e 2022.''', font_size=16)
+            '''Jogo desenvolvido por Augusto Cardoso Setti e
+            Murilo Vitória da Silva (há controvérsias)
+            como tarefa da disciplina de AIC IV, do 
+            Curso de Engenharia de Computação, entre
+            2021 e 2022.''', font_size=16)
         self.add.button('Back', self.get_back)
 
     def get_back(self):
