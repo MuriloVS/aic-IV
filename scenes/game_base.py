@@ -105,7 +105,7 @@ class GameBase:
 
     def update(self):
         # verifica se jogador completou o labirinto
-        win = pg.sprite.collide_rect(self.player, self.start)
+        win = pg.sprite.collide_rect(self.player, self.finish)
         if win:
             self.winner()
 

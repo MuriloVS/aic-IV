@@ -1,6 +1,6 @@
 import pygame as pg
 
-from scenes.main_menu import MainMenu, Options, Credits
+from scenes.main_menu import MainMenu, MultiplayerMenu, Options, Credits
 from scenes.game_singleplayer import GameSingleplayer
 from scenes.game_host import GameMultiplayerHost
 from scenes.game_guest import GameMultiplayerGuest
@@ -21,6 +21,7 @@ class Game:
 
         # menus
         self.menuInicial = MainMenu(self, self.window)
+        self.menuMultiplayer = MultiplayerMenu(self, self.window)
         self.options = Options(self, self.window)
         self.credits = Credits(self, self.window)
 

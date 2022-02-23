@@ -28,7 +28,7 @@ class GameSingleplayer(GameBase):
         # recebendo nível
 
         # cria o labirinto
-        self.maze = Maze(level=2, numPlayers=2)
+        self.maze = Maze(level=GAME_DIFFICULTY, numPlayers=2)
         self.maze.build()
         self.maze.build_walls_sprites()
         # recebendo posição inicial do player

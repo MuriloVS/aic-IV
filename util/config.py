@@ -6,6 +6,9 @@ import pygame as pg
 TITLE = 'A Maze'
 FPS = 30
 
+# dificuldade
+GAME_DIFFICULTY = 1
+
 # conexão
 LOCALHOST = '127.0.0.1'
 PORT = 5000
@@ -44,6 +47,3 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 PURPLE = (255, 0, 255)
 EBONY = (33, 36, 31)
-
-# dificuldade
-GAME_DIFFICULTY = 1
