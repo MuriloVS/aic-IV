@@ -1,6 +1,6 @@
 import pygame as pg
 
-from scenes.main_menu import MainMenu
+from scenes.main_menu import MainMenu, Options, Credits
 from scenes.game_singleplayer import GameSingleplayer
 from scenes.game_host import GameMultiplayerHost
 from scenes.game_guest import GameMultiplayerGuest
@@ -19,7 +19,12 @@ class Game:
 
         self.lvl = ''
 
+        # menus
         self.menuInicial = MainMenu(self, self.window)
+        self.options = Options(self, self.window)
+        self.credits = Credits(self, self.window)
+
+        # modos de jogo
         self.singleplayer = GameSingleplayer(self, self.window)
         self.multiplayer_host = GameMultiplayerHost(self, self.window)
         self.multiplayer_guest = GameMultiplayerGuest(self, self.window)
