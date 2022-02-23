@@ -133,11 +133,9 @@ class GameBase:
         self.play = False
         self.g.currentScene = self.g.menuInicial
 
-        self.players.empty()
-        self.walls.empty()
-        self.scenario_dinamic.empty()
-        self.scenario_static.empty()
-        self.all_sprites.empty()     
+        for sprite in self.all_sprites:
+            sprite.kill()
+            sprite = ''  
 
     def move_camera(self):
         # ao atingir os limites inferiores e superiores

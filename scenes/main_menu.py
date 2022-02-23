@@ -88,14 +88,18 @@ class Options(Menu):
     def load(self):
         self.clear(True)
 
-        # self.add.text_input('Name :', default='John Doe',
-        #                     font=pg_menu.font.FONT_COMIC_NEUE)
+        self.add.text_input('Name :', default='Murilo Dev Master',
+                            font=pg_menu.font.FONT_COMIC_NEUE)
         self.add.selector(
             'Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=self.set_difficulty)
-        self.add.button('Back', pg_menu.events.BACK)
+        self.add.button('Back', self.get_back)
 
     def set_difficulty(self, value, difficulty):
         print(value, difficulty)
+
+    def get_back(self):
+        self.game.currentScene = self.game.menuInicial
+        self.run = False
 
 
 class Credits(Menu):
