@@ -24,8 +24,8 @@ class Menu(pg_menu.Menu):
         self.set_sound(self.engine, recursive=True)
 
     def loop(self):
-        self.run = True
         self.enable()
+        self.run = True
         while self.run:
             events = pg.event.get()
             for event in events:
@@ -37,6 +37,7 @@ class Menu(pg_menu.Menu):
 
             pg.display.update()
         self.disable()
+        self.full_reset()
 
 
 class MainMenu(Menu):
@@ -45,9 +46,6 @@ class MainMenu(Menu):
 
         self.options = Options(game, self.window)
         self.credits = Credits(game, self.window)
-
-        pg_menu.Menu.in_submenu(self, self.options)
-        pg_menu.Menu.in_submenu(self, self.credits)
 
         self.run = False
 
@@ -59,6 +57,8 @@ class MainMenu(Menu):
         self.add.button('Opções', self.start_options)
         self.add.button('Sobre', self.start_credits)
         self.add.button('Sair', pg_menu.events.EXIT)
+
+        self.set_onbeforeopen(self.clear)
 
     def start_singleplayer(self):
         self.game.currentScene = self.game.singleplayer
@@ -92,7 +92,7 @@ class Options(Menu):
                             font=pg_menu.font.FONT_COMIC_NEUE)
         self.add.selector(
             'Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=self.set_difficulty)
-        self.add.button('Back', self.get_back)
+        self.add.button('Back', self.game.menuInicial)
 
     def set_difficulty(self, value, difficulty):
         print(value, difficulty)
