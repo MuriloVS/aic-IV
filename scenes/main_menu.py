@@ -5,10 +5,6 @@ import pygame as pg
 
 from util.config import *
 
-# engine = sound.Sound()
-# engine.set_sound(sound.SOUND_TYPE_OPEN_MENU, Path(
-#     'media', 'menu', 'misc_menu_4.wav'))
-
 
 class Menu(pg_menu.Menu):
     def __init__(self, game, window, theme=pg_menu.themes.THEME_BLUE):
@@ -91,11 +87,13 @@ class Options(Menu):
         self.add.text_input('Name :', default='Murilo Dev Master',
                             font=pg_menu.font.FONT_COMIC_NEUE)
         self.add.selector(
-            'Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=self.set_difficulty)
+            'Difficulty :', [('Easy', 1), ('Hard', 2)], onchange=self.set_difficulty)
         self.add.button('Back', self.get_back)
 
     def set_difficulty(self, value, difficulty):
-        print(value, difficulty)
+        global GAME_DIFFICULTY
+        GAME_DIFFICULTY = difficulty
+        print(GAME_DIFFICULTY)
 
     def get_back(self):
         self.game.currentScene = self.game.menuInicial
@@ -119,9 +117,11 @@ class Credits(Menu):
             da disciplina de AIC IV,
             do Curso de Engenharia de Computação,
             entre 2021 e 2022.''', font_size=16)
-        self.add.button('Back', )
+        self.add.button('Back', self.get_back)
 
-        # continuar aqui
+    def get_back(self):
+        self.game.currentScene = self.game.menuInicial
+        self.run = False
 
 
 if __name__ == '__main__':

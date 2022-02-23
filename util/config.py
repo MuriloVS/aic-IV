@@ -44,3 +44,6 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 PURPLE = (255, 0, 255)
 EBONY = (33, 36, 31)
+
+# dificuldade
+GAME_DIFFICULTY = 1
