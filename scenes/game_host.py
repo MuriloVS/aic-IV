@@ -22,7 +22,7 @@ class GameMultiplayerHost(GameBase):
     def loop(self):
         super().loop()
         self.client.desconnect()
-        self.server.close_server()              
+        self.server.close_server()
         self.g.currentScene = self.g.menuInicial
 
     def update(self):
@@ -50,11 +50,11 @@ class GameMultiplayerHost(GameBase):
         # lobby
 
         # cria o labirinto e envia ao servidor
-        self.maze = Maze(level=2, numPlayers=2)
+        self.maze = Maze(level=5, numPlayers=2)
         self.maze.build()
         self.maze.build_walls_sprites()
         # recebendo posição inicial do player
-        x, y = self.maze.get_player_position()      
+        x, y = self.maze.get_player_position()
 
         # cria linha de partida e chegada # continuar aqui
         self.finish = Target(self, 0, 0, GREEN)
@@ -62,10 +62,10 @@ class GameMultiplayerHost(GameBase):
 
         # enviando lab ao servidor
         message = {'id': 'load_maze', 'data': {
-                                                'list': self.maze.get_walls_list(),
-                                                'position': (x, y)
-                                              }
-        }      
+            'list': self.maze.get_walls_list(),
+            'position': (x, y)
+        }
+        }
         self.client.send_message(message)
 
         # geração dos jogadores convidados
