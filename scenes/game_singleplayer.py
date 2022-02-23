@@ -51,7 +51,7 @@ class GameSingleplayer(GameBase):
 
         self.music.play(loops=-1)
 
-    def win(self):
+    def winner(self):
         self.win = True
         self.scenario_static.add(self.win_text)
         #self.play = False

@@ -16,5 +16,4 @@ if __name__ == '__main__':
     while g.run:
         g.currentScene.load()
         g.currentScene.loop()
-
     pg.quit()

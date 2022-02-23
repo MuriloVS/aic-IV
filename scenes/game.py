@@ -26,7 +26,6 @@ class Game:
 
         self.currentScene = self.menuInicial
 
-        self.play = False
         self.run = True
 
     def draw_text(self, text, size, x, y, color=WHITE, font=pg.font.get_default_font()):

@@ -30,15 +30,13 @@ class GameBase:
         self.actions = {"left": False, "right": False, "up" : False, "down" : False, "action1" : False, "action2" : False, "start" : False}
 
         self.win = False
-        self.g.play = True
-        self.run = True
 
     @abstractclassmethod
     def load(self):
         pass
 
     @abstractclassmethod
-    def win(self):
+    def winner(self):
         pass
 
     @abstractclassmethod
@@ -62,7 +60,6 @@ class GameBase:
         global SCREENWIDTH, SCREENHEIGHT
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                self.run = False
                 self.play = False
                 
             if event.type == pg.VIDEORESIZE:
@@ -108,9 +105,9 @@ class GameBase:
 
     def update(self):
         # verifica se jogador completou o labirinto
-        win = pg.sprite.collide_rect(self.player, self.finish)
+        win = pg.sprite.collide_rect(self.player, self.start)
         if win:
-            self.win()
+            self.winner()
 
         self.player.update(self.walls)
 
@@ -134,7 +131,6 @@ class GameBase:
         self.music.stop()
 
         self.play = False
-        self.g.play = False
         self.g.currentScene = self.g.menuInicial
 
         self.players.empty()
