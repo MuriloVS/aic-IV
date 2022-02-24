@@ -1,6 +1,6 @@
 import pickle
 
-from util.config import *
+from config import *
 
 # Classe worker
 # - recebe msgns do cliente

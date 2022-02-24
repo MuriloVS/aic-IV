@@ -9,7 +9,7 @@ from sprites.player_guest import PlayerGuest
 from connection.server import Server
 from connection.client import Client
 from util.maze import Maze
-from util.config import *
+from config import *
 
 vector = pg.math.Vector2
 
@@ -19,18 +19,7 @@ class GameMultiplayerHost(GameBase):
     def __init__(self, game, window: pg.display):
         super().__init__(game, window)
 
-    def loop(self):
-        super().loop()
-        self.client.desconnect()
-        self.server.close_server()
-        self.g.currentScene = self.g.menuInicial
-
-    def update(self):
-        self.walls.update()
-        self.players.update()
-        self.player.update(self.walls)
-
-    def load(self, scene=MENU_PRINCIPAL):
+    def load(self):
         # carregano música
         #self.music_file = None
         #self.music = self.get_sound(self.music_file)
@@ -84,3 +73,10 @@ class GameMultiplayerHost(GameBase):
         self.set_camera_position(x, y)
 
         self.music.play(loops=-1)
+
+    def winner(self): # continuar aqui
+        pass
+
+    def close(self):
+        self.client.desconnect()
+        self.server.close_server()  

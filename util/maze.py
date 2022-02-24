@@ -1,7 +1,7 @@
 import random
 
 from sprites.wall import Wall
-from util.config import *
+from config import *
 
 
 class Spot:
@@ -24,13 +24,13 @@ class Spot:
 
 
 class Maze():
-    def __init__(self, level=10, numPlayers=1):
+    def __init__(self, level=2, numPlayers=1):
 
         self.level = level
         self.numPlayers = numPlayers
 
-        self.rows = level*6+1
-        self.cols = level*6+1
+        self.rows = self.level*6+1
+        self.cols = self.level*6+1
 
         self.completed = False
         self.walls = []

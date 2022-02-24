@@ -4,7 +4,7 @@ from scenes.main_menu import MainMenu, MultiplayerMenu, Options, Credits
 from scenes.game_singleplayer import GameSingleplayer
 from scenes.game_host import GameMultiplayerHost
 from scenes.game_guest import GameMultiplayerGuest
-from util.config import *
+from config import *
 
 vector = pg.math.Vector2
 
@@ -17,7 +17,7 @@ class Game:
         self.rect.center = (SCREENWIDTH/2, SCREENHEIGHT/2)
         pg.display.set_caption(TITLE)
 
-        self.lvl = ''
+        self.lvl = 1
 
         # menus
         self.menuInicial = MainMenu(self, self.window)

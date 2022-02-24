@@ -1,7 +1,7 @@
 import pygame as pg
 
 from sprites.player import Player
-from util.config import *
+from config import *
 
 vector = pg.math.Vector2
 

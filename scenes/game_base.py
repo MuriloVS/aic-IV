@@ -3,7 +3,7 @@ import pygame as pg
 from pathlib import Path
 from math import ceil
 
-from util.config import *
+from config import *
 
 vector = pg.math.Vector2
 
@@ -31,6 +31,17 @@ class GameBase:
 
         self.win = False
 
+    def loop(self):
+        self.play = True
+        while self.play:
+            self.clock.tick(FPS)
+
+            self.event_check()
+            self.update()
+            self.draw()
+            pg.display.flip()
+        self.close()
+
     @abstractclassmethod
     def load(self):
         pass
@@ -43,24 +54,12 @@ class GameBase:
     def close(self):
         pass
 
-    def loop(self):
-        self.play = True
-        while self.play:
-            self.clock.tick(FPS)
-
-            self.event_check()
-            self.update()
-            self.move_camera()
-            self.draw()
-
-            pg.display.flip()
-        self.close()
-
     def event_check(self):
         global SCREENWIDTH, SCREENHEIGHT
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.play = False
+                self.g.run = False
                 
             if event.type == pg.VIDEORESIZE:
                 SCREENWIDTH = event.w
@@ -104,6 +103,8 @@ class GameBase:
                     self.actions['start'] = False                 
 
     def update(self):
+        self._move_camera()
+        
         # verifica se jogador completou o labirinto
         win = pg.sprite.collide_rect(self.player, self.finish)
         if win:
@@ -121,23 +122,34 @@ class GameBase:
         self.window.blit(self.player.image, self.player.rect)
         self.scenario_static.draw(self.window)
 
-    def get_sound(self, music='music_intro.wav', volume=0.15) -> pg.mixer.Sound: # continuar aqui
-        path = Path('media', 'music', music)
-        music = pg.mixer.Sound(path)
-        music.set_volume(volume)
-        return music
-
     def reset_scene(self):
         self.music.stop()
 
         self.play = False
+        self.win = False
         self.g.currentScene = self.g.menuInicial
+        self.compass = vector(0, 0)
 
         for sprite in self.all_sprites:
             sprite.kill()
-            sprite = ''  
 
-    def move_camera(self):
+    def get_sound(self, music='music_intro.wav', volume=0.15) -> pg.mixer.Sound:
+        path = Path('media', 'sounds', music)
+        music = pg.mixer.Sound(path)
+        music.set_volume(volume)
+        return music
+
+    def set_camera_position(self, pos_x, pos_y):
+        self.compass.x -= pos_x - MIDSCREEN_X
+        self.compass.y -= pos_y - MIDSCREEN_Y
+        for player in self.players:
+            player.rect.x += self.compass.x      
+            player.rect.y += self.compass.y
+        for elem in self.scenario_dinamic:
+            elem.rect.x += self.compass.x
+            elem.rect.y += self.compass.y
+
+    def _move_camera(self):
         # ao atingir os limites inferiores e superiores
         # a posição dos objetos se reajusta
 
@@ -175,13 +187,3 @@ class GameBase:
                 player.rect.x -= move                 
             for elem in self.scenario_dinamic:
                 elem.rect.x -= move
-
-    def set_camera_position(self, pos_x, pos_y):
-        self.compass.x -= pos_x - MIDSCREEN_X
-        self.compass.y -= pos_y - MIDSCREEN_Y
-        for player in self.players:
-            player.rect.x += self.compass.x      
-            player.rect.y += self.compass.y
-        for elem in self.scenario_dinamic:
-            elem.rect.x += self.compass.x
-            elem.rect.y += self.compass.y

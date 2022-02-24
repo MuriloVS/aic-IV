@@ -5,7 +5,7 @@ from multiprocessing import Manager
 import pickle
 
 from connection.server_client import ServerClient
-from util.config import LOCALHOST, PORT
+from config import LOCALHOST, PORT
 
 
 class Server():

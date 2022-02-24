@@ -1,8 +1,9 @@
 import pygame as pg
 
 from scenes.game import Game
-from util.config import *
+from config import *
 
+LVL = 1
 
 if __name__ == '__main__':
 

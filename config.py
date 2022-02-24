@@ -1,5 +1,3 @@
-import pygame as pg
-
 # Arquivo de configuração
 
 # janela
@@ -21,13 +19,6 @@ SCREENHEIGHT = 700
 # player property
 PLAYER_ACC = 2
 PLAYER_FRICTION = -0.4
-
-# scene's name
-MENU_PRINCIPAL = 0
-LOBBY = 1
-MAZE = 2
-GAME_OVER = 3
-PAUSE = 4
 
 # measures
 SIZE = 100

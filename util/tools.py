@@ -2,8 +2,10 @@ import pygame as pg
 
 from util.maze import Maze
 from sprites.wall import Wall
-from util.config import FPS
+from config import FPS
 
+def create_player_guest(): # continuar aqui
+    pass
 
 def wait_for_key() -> bool:
     waiting = True

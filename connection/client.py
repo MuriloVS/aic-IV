@@ -2,7 +2,7 @@ import pickle
 import socket
 from uuid import uuid4
 
-from util.config import *
+from config import *
 
 
 class Client:

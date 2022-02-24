@@ -1,12 +1,11 @@
 import pygame as pg
-from math import ceil
 
 from scenes.game_base import GameBase
 from sprites.player import Player
 from sprites.target import Target
 from sprites.text import Text
 from util.maze import Maze
-from util.config import *
+from config import *
 
 vector = pg.math.Vector2
 
@@ -28,7 +27,7 @@ class GameSingleplayer(GameBase):
         # recebendo nível
 
         # cria o labirinto
-        self.maze = Maze(level=GAME_DIFFICULTY, numPlayers=2)
+        self.maze = Maze(level=self.g.lvl, numPlayers=2)
         self.maze.build()
         self.maze.build_walls_sprites()
         # recebendo posição inicial do player
@@ -43,9 +42,11 @@ class GameSingleplayer(GameBase):
 
         # adicionando sprites aos grupos
         self.scenario_dinamic.add(self.finish, self.start)
+        self.all_sprites.add(self.finish, self.start)
         for wall in self.maze.walls:
             self.walls.add(wall)
             self.scenario_dinamic.add(wall)
+            self.all_sprites.add(wall)
         
         self.set_camera_position(x, y)
 
@@ -54,9 +55,6 @@ class GameSingleplayer(GameBase):
     def winner(self):
         self.win = True
         self.scenario_static.add(self.win_text)
+        self.all_sprites.add(self.win_text)
         #self.play = False
         #self.g.currentScene = self.g.menuInicial
-
-    def close(self):
-        self.win = False
-        self.reset_scene()

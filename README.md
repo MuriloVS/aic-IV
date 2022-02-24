@@ -1,5 +1,21 @@
-- Continuar a implementar menus
+- Rodar jogo multiplayer (em andamento)
+    atualizar msgm
 
-- Rever event_check do game para reutilizar funções básicas em outras classes
-- Rever geraçao de cenas
-- Adicionar flags para botões pressionados (para que o loop dos inputs não ocorram mais que uma vez)
+- Continuar a implementar menus
+- Tela Lobby
+- Tela Carregamento
+- Tela Game Over
+- Tela Vencedor
+- Buscar artes
+- Buscar sons
+- Dinâmica de captura de ítens
+- Criar executável (Sem mostrar terminal)
+
+- Implementar jogo online
+- Implementar obstáculos
+- Implementar relógio
+- Redesenhar menus
+- Implementar animação
+- Capturar e imprimir em cima do jogador nome do cliente
+- Criar README
+- Implementar jogo local

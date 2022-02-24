@@ -7,7 +7,7 @@ from sprites.player_online import PlayerOnline
 from sprites.player_guest import PlayerGuest
 from connection.client import Client
 from util.tools import generate_walls_sprites_group
-from util.config import *
+from config import *
 
 vector = pg.math.Vector2
 
@@ -36,8 +36,8 @@ class GameMultiplayerGuest(GameSingleplayer):
         self.window.blit((self.player.image), (self.player.rect))  # não necessário
 
     def load(self):
-        self.walls.empty()
-        self.players.empty()
+        # carregano música
+        self.music = self.get_sound() 
 
         # criando cliente para conectar no servidor
         self.client = Client(self, LOCALHOST, PORT)
@@ -54,7 +54,7 @@ class GameMultiplayerGuest(GameSingleplayer):
         # criação do player atual
         self.player = PlayerOnline(self, self.client)
 
-        self.play_music()
+        self.music.play()
 
     def update_maze(self, maze_list=None):
         if maze_list:
