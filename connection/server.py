@@ -20,13 +20,13 @@ class Server():
         # listen para esperar as conexões
         self.s.listen(2)
 
-        # print(f'Servidor rodando em {LOCALHOST} na porta {PORT}')
+        print(f'Servidor rodando em {LOCALHOST} na porta {PORT}')
 
         self.clients = []
         self.playerID = 1
 
         manenger = Manager()
-        self.maze_list = manenger.Value(typecode=list, value=[])
+        self.maze_list = manenger.Value(typecode=dict, value={})
         self.initial_player_position = manenger.Value(typecode=tuple, value=(0, 0))
         self.targets = manenger.Value(typecode=tuple, value=(0, 0))
 

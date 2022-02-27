@@ -1,4 +1,5 @@
 import pickle
+import time
 
 from config import *
 
@@ -9,10 +10,9 @@ from config import *
 class ServerClient:
 
     # Inicializa a instância do cliente no server
-    def __init__(self, server, conn, id, maze_list):
+    def __init__(self, server, conn, id):
 
         self.id = id
-        self.maze_list = maze_list
 
         # Armazena a referência ao servidor para realizar comunicação
         self.s = server
@@ -38,10 +38,11 @@ class ServerClient:
             try:
                 # espera receber mensagem do servidor
                 msg_lenght = pickle.loads(self.conn.recv(HEADER))
+                print(msg_lenght)
                 if msg_lenght: # se tam for recebido
                     msg_lenght = int(msg_lenght) # armazena valor em int
                     msg = pickle.loads(self.conn.recv(msg_lenght))
-                    #print(f'[SERVIDOR] Mensagem recebida:{msg["id"]}')
+                    print(f'[SERVIDOR] Mensagem recebida:{msg["id"]}')
                     
                     # Chama função para lidar com mensagem
                     self.handle_msg(msg)
@@ -61,11 +62,11 @@ class ServerClient:
             self.s.personal_message(self.conn, self.id)
 
         elif message['id'] == 'load_maze':
-            self.maze_list.value = message['data']
+            self.s.maze_list.value = message['data']
 
         elif message['id'] == 'get_maze':
             msg = {'id': 'load_maze',
-                       'data': self.maze_list.value
+                       'data': self.s.maze_list.value
                       }
             self.s.personal_message(self.conn, msg)
         
@@ -83,8 +84,9 @@ class ServerClient:
 
     def send_maze(self):
         message = {'id': 'load_maze',
-                'data': self.maze_list.value
+                   'data': self.s.maze_list.value
                 }
+        print(message)
         self.s.personal_message(self.conn, message)        
 
     def send_clients(self):
@@ -92,4 +94,5 @@ class ServerClient:
             message = {'id': 'player_guest',
                        'data': client.id
                       }
-            self.s.personal_message(self.conn, message) 
+            self.s.personal_message(self.conn, message)
+            time.sleep(0.2)

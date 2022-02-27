@@ -36,7 +36,7 @@ class GameMultiplayerHost(GameBase):
         self.client = Client(self, LOCALHOST, PORT)
         self.TClient = Thread(target=self.client.receive_message)
         self.TClient.start()
-        time.sleep(1)
+        time.sleep(2)
 
         # cria o labirinto e envia ao servidor
         self.maze = Maze(level=self.g.lvl, numPlayers=2)
@@ -55,7 +55,10 @@ class GameMultiplayerHost(GameBase):
             'size': (self.maze.rows, self.maze.rows)
         }
         }
+        print('aqui1')
         self.client.send_message(message)
+        time.sleep(1)
+        print('aqui2')
 
         # geração dos jogadores convidados
         self.player2 = PlayerGuest(self, 2)

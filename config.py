@@ -8,8 +8,8 @@ FPS = 30
 GAME_DIFFICULTY = 1
 
 # conexão
-LOCALHOST = '127.0.0.1'
-PORT = 5000
+LOCALHOST = 'localhost'
+PORT = 5555
 HEADER = 2048
 
 # tamanho da tela

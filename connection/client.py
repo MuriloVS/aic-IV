@@ -30,10 +30,11 @@ class Client:
             try:
                 # espera receber mensagem do servidor
                 msg_lenght = pickle.loads(self.conn.recv(HEADER))
+                print(msg_lenght)
                 if msg_lenght: # se tam for recebido
                     msg_lenght = int(msg_lenght) # armazena valor em int
                     msg = pickle.loads(self.conn.recv(msg_lenght))
-                    # print(f'[PLAYER] Mensagem recebida: {msg}')
+                    print(f'[PLAYER] Mensagem recebida: {msg}')
 
                     # Chama função para lidar com mensagem
                     self.handle_msg(msg)
@@ -52,7 +53,7 @@ class Client:
             self.game.player2.move(pos_x, pos_y)        
         
         elif message['id'] == 'load_maze':
-            print('aqui')
+            print(message['data'])
             maze_list = message['data']['list']
             self.game.update_maze(maze_list)
             pos_x, pos_y = message['data']['position']
@@ -78,15 +79,15 @@ class Client:
 
     def send_message(self, message):
         try:
-            # print('[PLAYER] Enviando msg: ', message['id'])
+            print('[PLAYER] Enviando msg: ', message['id'])
             msg = pickle.dumps(message)
             send_length = pickle.dumps(len(msg))
 
             self.conn.send(send_length)
             self.conn.send(msg)
 
-        except:
-            pass
+        except Exception as e:
+            print(f'[PLAYER] Erro send_message -> {e}')
 
     def desconnect(self):
         self.conn.close()

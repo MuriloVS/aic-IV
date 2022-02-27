@@ -25,7 +25,6 @@ class GameMultiplayerGuest(GameSingleplayer):
         self.client = Client(self, LOCALHOST, PORT)
         self.TClient = Thread(target=self.client.receive_message)
         self.TClient.start()
-        time.sleep(1)
 
         # geração das posições dos player
 
@@ -36,9 +35,12 @@ class GameMultiplayerGuest(GameSingleplayer):
         # criação do player atual
         self.player = PlayerOnline(self, self.client)
 
+        time.sleep(1)
+
         self.music.play()
 
     def update_maze(self, maze_list=None):
+        print(maze_list)
         if maze_list:
             walls = generate_walls_sprites_group(maze_list)
         else:
@@ -52,7 +54,7 @@ class GameMultiplayerGuest(GameSingleplayer):
 
 
     def create_guest(self, data):
-        print(data)
+        print('criando guest')
         guest = GameMultiplayerGuest(self, self.window,) # continuar aqui
 
     def close(self):

@@ -141,7 +141,6 @@ class GameBase:
 
     def set_targets(self, rows, cols):
         # cria linha de partida e chegada
-        print('setou targets')
         self.finish = Target(self, 0, 0, GREEN)
         self.start = Target(self, rows-1, cols-1, RED)
         self.scenario_dinamic.add(self.finish, self.start)
@@ -172,15 +171,11 @@ class GameBase:
         if self.player.rect.top <= SCREENHEIGHT * (1/3):
             self.player.pos.y += move
             self.compass.y += move
-            for player in self.players:
-                player.rect.y += move
             for elem in self.scenario_dinamic:
                 elem.rect.y += move
         elif self.player.rect.bottom >= SCREENHEIGHT * (2/3):
             self.player.pos.y -= move
-            self.compass.y -= move
-            for player in self.players:
-                player.rect.y -= move            
+            self.compass.y -= move          
             for elem in self.scenario_dinamic:
                 elem.rect.y -= move
 
@@ -188,16 +183,12 @@ class GameBase:
         move = ceil(abs(self.player.vel.x))
         if self.player.rect.left <= SCREENWIDTH * (1/3):
             self.player.pos.x += move
-            self.compass.x += move
-            for player in self.players:
-                player.rect.x += move            
+            self.compass.x += move         
             for elem in self.scenario_dinamic:
                 elem.rect.x += move
 
         elif self.player.rect.right >= SCREENWIDTH * (2/3):
             self.player.pos.x -= move
-            self.compass.x -= move
-            for player in self.players:
-                player.rect.x -= move                 
+            self.compass.x -= move            
             for elem in self.scenario_dinamic:
                 elem.rect.x -= move
