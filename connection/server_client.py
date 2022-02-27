@@ -25,17 +25,11 @@ class ServerClient:
 
         print(f'[SERVIDOR] Nova conexão: Player {self.id}')
 
-        # Enviando mensagem com ID do player
-        message = {'id': 'player_id',
-                   'data': self.id
-                  }
-        self.s.personal_message(self.conn, message)
-
+        # Enviando mensagem com ID do player e infos sobre o labirinto
+        self.send_id()
+        self.send_clients()
         if (self.id > 1):
-            message = {'id': 'load_maze',
-                    'data': self.maze_list.value
-                    }
-            self.s.personal_message(self.conn, message)
+            self.send_maze()
 
     # Aguarda o recebimento de uma mensagem do cliente
     def start(self):
@@ -80,3 +74,22 @@ class ServerClient:
 
         # except:
         # print(f'ERRO HANDLE MSG: {message}')
+
+    def send_id(self):
+        message = {'id': 'player_id',
+                   'data': self.id
+                  }
+        self.s.personal_message(self.conn, message)                
+
+    def send_maze(self):
+        message = {'id': 'load_maze',
+                'data': self.maze_list.value
+                }
+        self.s.personal_message(self.conn, message)        
+
+    def send_clients(self):
+        for client in self.s.clients:
+            message = {'id': 'player_guest',
+                       'data': client.id
+                      }
+            self.s.personal_message(self.conn, message) 

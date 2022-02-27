@@ -15,25 +15,7 @@ vector = pg.math.Vector2
 class GameMultiplayerGuest(GameSingleplayer):
 
     def __init__(self, game, window: pg.display):
-        super().__init__(game, window)
-
-    def loop(self):
-        super().loop()
-        self.client.desconnect()               
-
-    def update(self):
-        self.walls.update()
-        self.players.update()
-        self.player.update(self.walls)
-
-    def draw(self):
-        self.window.fill((150, 200, 145))
-
-        # desenha todos os objetos na tela
-        self.walls.draw(self.window)
-
-        # self.players.draw(self.window)
-        self.window.blit((self.player.image), (self.player.rect))  # não necessário
+        super().__init__(game, window)    
 
     def load(self):
         # carregano música
@@ -63,8 +45,16 @@ class GameMultiplayerGuest(GameSingleplayer):
             walls = generate_walls_sprites_group(self.maze_list)
         
         # adicionando sprites aos grupos
-        self.walls.empty()
         for wall in walls:
             self.walls.add(wall)
+            self.scenario_dinamic.add(wall)
+            self.all_sprites.add(wall)
 
+
+    def create_guest(self, data):
+        print(data)
+        guest = GameMultiplayerGuest(self, self.window,) # continuar aqui
+
+    def close(self):
+        self.client.desconnect()
 

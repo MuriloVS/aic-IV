@@ -18,4 +18,5 @@
 - Implementar animação
 - Capturar e imprimir em cima do jogador nome do cliente
 - Criar README
+- Revisar resize e posição dos objetos em outras resoluções
 - Implementar jogo local

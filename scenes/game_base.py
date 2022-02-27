@@ -3,6 +3,8 @@ import pygame as pg
 from pathlib import Path
 from math import ceil
 
+#from scenes.game_guest import GameMultiplayerGuest
+from sprites.target import Target
 from config import *
 
 vector = pg.math.Vector2
@@ -106,9 +108,12 @@ class GameBase:
         self._move_camera()
         
         # verifica se jogador completou o labirinto
-        win = pg.sprite.collide_rect(self.player, self.finish)
-        if win:
-            self.winner()
+        try:
+            win = pg.sprite.collide_rect(self.player, self.finish)
+            if win:
+                self.winner()
+        except:
+            pass
 
         self.player.update(self.walls)
 
@@ -128,10 +133,19 @@ class GameBase:
         self.play = False
         self.win = False
         self.g.currentScene = self.g.menuInicial
+        self.actions = {"left": False, "right": False, "up" : False, "down" : False, "action1" : False, "action2" : False, "start" : False}
         self.compass = vector(0, 0)
 
         for sprite in self.all_sprites:
             sprite.kill()
+
+    def set_targets(self, rows, cols):
+        # cria linha de partida e chegada
+        print('setou targets')
+        self.finish = Target(self, 0, 0, GREEN)
+        self.start = Target(self, rows-1, cols-1, RED)
+        self.scenario_dinamic.add(self.finish, self.start)
+        self.all_sprites.add(self.finish, self.start)        
 
     def get_sound(self, music='music_intro.wav', volume=0.15) -> pg.mixer.Sound:
         path = Path('media', 'sounds', music)

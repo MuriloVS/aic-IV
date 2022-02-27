@@ -46,19 +46,25 @@ class Client:
     # Lida com mensagem recebida
     def handle_msg(self, message):
         # try:
-        if message['id'] == 'player_id':
-            self.id = message['data']
-
-        elif message['id'] == 'load_maze':
-            maze_list = message['data']['list']
-            self.game.update_maze(maze_list)
-            position = message['data']['position']
-            self.game.set_camera_position(position[0], position[1])
-
-        elif message['id'] == 'player_position':
+        if message['id'] == 'player_position':
             pos_x = message['data']['x']
             pos_y = message['data']['y']
-            self.game.player2.move(pos_x, pos_y)
+            self.game.player2.move(pos_x, pos_y)        
+        
+        elif message['id'] == 'load_maze':
+            print('aqui')
+            maze_list = message['data']['list']
+            self.game.update_maze(maze_list)
+            pos_x, pos_y = message['data']['position']
+            self.game.set_camera_position(pos_x, pos_y)
+            rows, cols = message['data']['size']
+            self.game.set_targets(rows, cols)
+
+        elif message['id'] == 'player_guest':
+            self.game.multiplayer_guest.create_guest(message['data']) # continuar aqui
+
+        elif message['id'] == 'player_id':
+            self.id = message['data']
 
         elif message['id'] == 'initial_position':
             pos_x = message['data']['x']

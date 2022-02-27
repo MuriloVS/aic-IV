@@ -6,6 +6,8 @@ from scenes.game_base import GameBase
 from sprites.target import Target
 from sprites.player_online import PlayerOnline
 from sprites.player_guest import PlayerGuest
+from sprites.target import Target
+from sprites.text import Text
 from connection.server import Server
 from connection.client import Client
 from util.maze import Maze
@@ -36,23 +38,21 @@ class GameMultiplayerHost(GameBase):
         self.TClient.start()
         time.sleep(1)
 
-        # lobby
-
         # cria o labirinto e envia ao servidor
-        self.maze = Maze(level=5, numPlayers=2)
+        self.maze = Maze(level=self.g.lvl, numPlayers=2)
         self.maze.build()
         self.maze.build_walls_sprites()
         # recebendo posição inicial do player
         x, y = self.maze.get_player_position()
 
         # cria linha de partida e chegada # continuar aqui
-        self.finish = Target(self, 0, 0, GREEN)
-        self.start = Target(self, self.maze.rows-1, self.maze.cols-1, RED)
+        self.set_targets(self.maze.rows, self.maze.cols)
 
         # enviando lab ao servidor
         message = {'id': 'load_maze', 'data': {
             'list': self.maze.get_walls_list(),
-            'position': (x, y)
+            'position': (x, y),
+            'size': (self.maze.rows, self.maze.rows)
         }
         }
         self.client.send_message(message)
@@ -65,17 +65,28 @@ class GameMultiplayerHost(GameBase):
 
         # adicionando sprites aos grupos
         self.players.add(self.player2)
-        self.scenario_dinamic.add(self.finish, self.start, self.player2)
+        self.scenario_dinamic.add(self.player2)
+
         for wall in self.maze.walls:
             self.walls.add(wall)
             self.scenario_dinamic.add(wall)
+            self.all_sprites.add(wall)
 
         self.set_camera_position(x, y)
 
         self.music.play(loops=-1)
 
     def winner(self): # continuar aqui
-        pass
+        # mensagem de vitória
+        msg = 'VOCÊ GANHOU!'
+        self.win_text = Text(msg, 40, MIDSCREEN_X, MIDSCREEN_Y, color=BLACK, background=WHITE)
+
+        self.scenario_static.add(self.win_text)
+        self.all_sprites.add(self.win_text)
+
+        self.win = True
+        #self.play = False
+        #self.g.currentScene = self.g.menuInicial
 
     def close(self):
         self.client.desconnect()
