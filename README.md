@@ -1,4 +1,4 @@
-# A Maze'n Game
+# A Maze'n Game (Em Desenvolvimento)
 
 Projeto desenvolvido para a disciplina de Atividade de Integração Curricular 4 (AIC 4) do curso de Engenharia de Computação - FURG. A Maze'n Game é o MVP de um jogo onde o objetivo é encontrar a saída de uma labirinto gerado proceduralmente através de backtracking. O jogo pode ser jogado no mode singleplayer ou multiplayer.
 
@@ -7,7 +7,7 @@ Projeto desenvolvido para a disciplina de Atividade de Integração Curricular 4
 - Augusto Cardoso Setti
 - Murilo Vitória da Silva
 
-## Instalando requitements
+## Instalando requirements
 
 Os requisitos ou dependências para a execução do jogo estão disponíveis no arquivo 'requirements.txt'. Para que a aplicação seja executada é necessário:
 
@@ -18,6 +18,19 @@ Os requisitos ou dependências para a execução do jogo estão disponíveis no 
 
 ## Executando o jogo
 
+O jogo pode ser executado através do comando:<br>
+
+``` python main.py ```
+
+## Como jogar
+
+- Setas: Movimentação do jogador
+- Enter: Acessa ítem no menu
+- Escape: Retorna a cena anterior
+
+## Observações
+
+- Para testar o jogo no modo multiplayer é necessário executá-lo em dois terminais. Na primeira janela acesse multiplayer>create room e aguarde até que o jogo carregue. No segundo acesse multiplayer>connect room.
 
 
 ## Funcionalidades a serem implementadas

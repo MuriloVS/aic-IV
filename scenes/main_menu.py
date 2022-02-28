@@ -156,7 +156,6 @@ class Options(Menu):
     def set_difficulty(self, value, difficulty):
         self.game.lvl = int(difficulty)
 
-
 class Credits(Menu):
     def __init__(self, game, window):
         super().__init__(game, window)
