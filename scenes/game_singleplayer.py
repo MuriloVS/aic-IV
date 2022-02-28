@@ -43,7 +43,7 @@ class GameSingleplayer(GameBase):
 
         self.music.play(loops=-1)
 
-    def winner(self):
+    def maze_complete(self):
         # mensagem de vitória
         msg = 'VOCÊ GANHOU!'
         self.win_text = Text(msg, 40, MIDSCREEN_X, MIDSCREEN_Y, color=BLACK, background=WHITE)

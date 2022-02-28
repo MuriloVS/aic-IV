@@ -141,7 +141,7 @@ class Options(Menu):
         if not self.loaded:
             self.add.label('Options')
             self.add.vertical_margin(20)
-            self.add.text_input('Name :', default='Murilo Dev Master',
+            self.add.text_input('Name :', default='Mr Ball',
                                 font=pg_menu.font.FONT_COMIC_NEUE)
             self.add.selector(
                 'Difficulty :', [('Easy', 1), ('Normal', 2), ('Hard', 3), ('Very Hard', 4), ('Impossible', 5)], onchange=self.set_difficulty)
@@ -165,10 +165,10 @@ class Credits(Menu):
         if not self.loaded:
             self.add.label('About')
             self.add.label(
-                '''Jogo desenvolvido por Augusto Cardoso Setti e
-                Murilo Vitória da Silva (há controvérsias)
-                como tarefa da disciplina de AIC IV, do 
-                Curso de Engenharia de Computação, entre
+                '''Jogo desenvolvido por Augusto Cardoso Setti
+                e Murilo Vitória da Silva como tarefa da
+                disciplina de AIC IV, do Curso de 
+                Engenharia de Computação, entre
                 2021 e 2022.''', font_size=16)
             self.add.button('Back', self.get_back)
 

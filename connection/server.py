@@ -18,17 +18,18 @@ class Server():
         self.s.bind((LOCALHOST, PORT))
 
         # listen para esperar as conexões
-        self.s.listen(2)
+        self.s.listen()
 
         print(f'Servidor rodando em {LOCALHOST} na porta {PORT}')
 
         self.clients = []
         self.playerID = 1
+        self.finished = False # aqui
 
         manenger = Manager()
         self.maze_list = manenger.Value(typecode=dict, value={})
-        self.initial_player_position = manenger.Value(typecode=tuple, value=(0, 0))
-        self.targets = manenger.Value(typecode=tuple, value=(0, 0))
+        #self.initial_player_position = manenger.Value(typecode=tuple, value=(0, 0))
+        #self.targets = manenger.Value(typecode=tuple, value=(0, 0))
 
         self.online = True
 
@@ -40,7 +41,14 @@ class Server():
                 client, address = self.s.accept()
 
                 # print(f'[NOVA CONEXÃO] Player {self.playerID}')
-                c = ServerClient(self, client, self.playerID, self.maze_list)
+                c = ServerClient(self, client, self.playerID)
+
+                # notificando clientes
+                message = {'id': 'player_guest',
+                        'data': c.id
+                        }
+                self.broadcast(client, message)
+
                 self.clients.append(c)
 
                 # Cria thread para receber msgns do cliente
@@ -52,6 +60,27 @@ class Server():
             except:
                 self.online = False
 
+    def personal_message(self, conn, message):
+        # Recebendo variáveis já codificados para envio
+        message, send_length = pickle_message(message)
+
+        # Envia mensagem a todos clientes conectados
+        conn.send(send_length)
+        conn.send(message)
+
+    def broadcast(self, conn, message):
+        # Recebendo variáveis já codificados para envio
+        message, send_length = pickle_message(message)
+
+        for client in self.clients:
+            # if client.conn != conn:
+            client.conn.send(send_length)
+            client.conn.send(message)
+
+    def close_server(self):
+        self.online = False
+        self.s.close()        
+
     # Realiza desinscrição de um usuário
     def unsubscribe(self, client):
         # Remova usuário das listas de clientes conectados
@@ -61,28 +90,6 @@ class Server():
 
         # Encerra socket do cliente
         client.conn.close()
-
-    def personal_message(self, conn, message):
-        # Recebendo variáveis já codificados para envio
-        message, send_length = pickle_message(message)
-
-        # Envia mensagem a todos clientes conectados
-        conn.send(send_length)
-        time.sleep(0.1)
-        conn.send(message)
-
-    def broadcast(self, conn, message):
-        # Recebendo variáveis já codificados para envio
-        message, send_length = pickle_message(message)
-
-        for client in self.clients:
-            if client.conn != conn:
-                client.conn.send(send_length)
-                client.conn.send(message)
-
-    def close_server(self):
-        self.online = False
-        self.s.close()        
 
 def pickle_message(message):
     message = pickle.dumps(message)

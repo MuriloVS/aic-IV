@@ -47,9 +47,17 @@ class GameBase:
     @abstractclassmethod
     def load(self):
         pass
+   
+    @abstractclassmethod
+    def maze_complete(self):
+        pass
 
     @abstractclassmethod
     def winner(self):
+        pass
+
+    @abstractclassmethod
+    def loser(self):
         pass
 
     @abstractclassmethod
@@ -111,11 +119,12 @@ class GameBase:
         try:
             win = pg.sprite.collide_rect(self.player, self.finish)
             if win:
-                self.winner()
+                self.maze_complete()
         except:
             pass
 
         self.player.update(self.walls)
+        self.players.update()
 
     def draw(self):
         # cor de fundo
@@ -125,7 +134,7 @@ class GameBase:
         self.scenario_dinamic.draw(self.window)
         self.players.draw(self.window)
         self.window.blit(self.player.image, self.player.rect)
-        self.scenario_static.draw(self.window)
+        self.scenario_static.draw(self.window)      
 
     def reset_scene(self):
         self.music.stop()

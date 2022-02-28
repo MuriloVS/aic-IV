@@ -39,8 +39,8 @@ class GameMultiplayerHost(GameBase):
         time.sleep(2)
 
         # cria o labirinto e envia ao servidor
-        self.maze = Maze(level=self.g.lvl, numPlayers=2)
-        self.maze.build()
+        self.maze = Maze(level=self.g.lvl, numPlayers=2)        
+        self.maze.build()       
         self.maze.build_walls_sprites()
         # recebendo posição inicial do player
         x, y = self.maze.get_player_position()
@@ -53,22 +53,13 @@ class GameMultiplayerHost(GameBase):
             'list': self.maze.get_walls_list(),
             'position': (x, y),
             'size': (self.maze.rows, self.maze.rows)
+                                              }
         }
-        }
-        print('aqui1')
         self.client.send_message(message)
-        time.sleep(1)
-        print('aqui2')
-
-        # geração dos jogadores convidados
-        self.player2 = PlayerGuest(self, 2)
+        time.sleep(0.2)
 
         # gerações do player atual
         self.player = PlayerOnline(self, self.client)
-
-        # adicionando sprites aos grupos
-        self.players.add(self.player2)
-        self.scenario_dinamic.add(self.player2)
 
         for wall in self.maze.walls:
             self.walls.add(wall)
@@ -79,7 +70,14 @@ class GameMultiplayerHost(GameBase):
 
         self.music.play(loops=-1)
 
-    def winner(self): # continuar aqui
+    def maze_complete(self):
+        if self.win == False:
+            message = {'id': 'win', 'data': {
+                                       'player_id': self.client.id}
+            }
+            self.client.send_message(message)            
+
+    def winner(self):        
         # mensagem de vitória
         msg = 'VOCÊ GANHOU!'
         self.win_text = Text(msg, 40, MIDSCREEN_X, MIDSCREEN_Y, color=BLACK, background=WHITE)
@@ -90,6 +88,24 @@ class GameMultiplayerHost(GameBase):
         self.win = True
         #self.play = False
         #self.g.currentScene = self.g.menuInicial
+
+    def loser(self):
+        # mensagem de vitória
+        msg = 'VOCÊ PERDEU!'
+        self.win_text = Text(msg, 40, MIDSCREEN_X, MIDSCREEN_Y, color=BLACK, background=WHITE)
+
+        self.scenario_static.add(self.win_text)
+        self.all_sprites.add(self.win_text)
+
+        self.win = True
+        #self.play = False
+        #self.g.currentScene = self.g.menuInicial
+
+    def create_guest(self, data):
+        guest = PlayerGuest(self, data)
+        self.players.add(guest)
+        self.scenario_dinamic.add(guest)
+        self.all_sprites.add(guest)
 
     def close(self):
         self.client.desconnect()

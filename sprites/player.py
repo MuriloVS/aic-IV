@@ -12,15 +12,15 @@ class Player(pg.sprite.Sprite):
 
         self.game = game
 
-        path = Path("media", "images", "tv.png")
-        self.image = pg.image.load(path).convert()
-        self.rect = self.image.get_rect()
+        # path = Path("media", "images", "tv.png")
+        # self.image = pg.image.load(path).convert()
+        # self.rect = self.image.get_rect()
 
-        # size = SIZE/3
-        # self.image = pg.surface.Surface((size, size))
-        # self.image = pg.surface.Surface.convert(self.image)
-        # self.image.set_colorkey(BLACK)
-        # self.rect = pg.draw.circle(self.image, (0, 100, 50), (size/2, size/2), size/2)
+        size = SIZE/3
+        self.image = pg.surface.Surface((size, size))
+        self.image = pg.surface.Surface.convert(self.image)
+        self.image.set_colorkey(BLACK)
+        self.rect = pg.draw.circle(self.image, (45,45,45), (size/2, size/2), size/2)
 
         self.rect.center = (pos_x, pos_y)
         self.pos = vector(self.rect.center)

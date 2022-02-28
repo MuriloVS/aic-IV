@@ -31,6 +31,8 @@ class Maze():
 
         self.rows = self.level*6+1
         self.cols = self.level*6+1
+        # self.rows = 3
+        # self.cols = 3
 
         self.completed = False
         self.walls = []

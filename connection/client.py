@@ -30,11 +30,10 @@ class Client:
             try:
                 # espera receber mensagem do servidor
                 msg_lenght = pickle.loads(self.conn.recv(HEADER))
-                print(msg_lenght)
                 if msg_lenght: # se tam for recebido
                     msg_lenght = int(msg_lenght) # armazena valor em int
                     msg = pickle.loads(self.conn.recv(msg_lenght))
-                    print(f'[PLAYER] Mensagem recebida: {msg}')
+                    #print(f'[PLAYER] Mensagem recebida: {msg}')
 
                     # Chama função para lidar com mensagem
                     self.handle_msg(msg)
@@ -46,40 +45,44 @@ class Client:
 
     # Lida com mensagem recebida
     def handle_msg(self, message):
-        # try:
-        if message['id'] == 'player_position':
-            pos_x = message['data']['x']
-            pos_y = message['data']['y']
-            self.game.player2.move(pos_x, pos_y)        
-        
-        elif message['id'] == 'load_maze':
-            print(message['data'])
-            maze_list = message['data']['list']
-            self.game.update_maze(maze_list)
-            pos_x, pos_y = message['data']['position']
-            self.game.set_camera_position(pos_x, pos_y)
-            rows, cols = message['data']['size']
-            self.game.set_targets(rows, cols)
+        try:
+            if message['id'] == 'player_position':
+                pos_x = message['data']['x']
+                pos_y = message['data']['y']
+                for client in self.game.players:
+                    if client.client == message['data']['player_id']:
+                        client.move(pos_x, pos_y)        
+            
+            elif message['id'] == 'load_maze':
+                rows, cols = message['data']['size']
+                self.game.set_targets(rows, cols)
+                maze_list = message['data']['list']
+                self.game.update_maze(maze_list)                    
+                pos_x, pos_y = message['data']['position']
+                self.game.set_camera_position(pos_x, pos_y)                
 
-        elif message['id'] == 'player_guest':
-            self.game.multiplayer_guest.create_guest(message['data']) # continuar aqui
+            elif message['id'] == 'player_guest':
+                self.game.create_guest(message['data'])
 
-        elif message['id'] == 'player_id':
-            self.id = message['data']
+            elif message['id'] == 'player_id':
+                self.id = message['data']
 
-        elif message['id'] == 'initial_position':
-            pos_x = message['data']['x']
-            pos_y = message['data']['y']
-            self.game.player2.move(pos_x, pos_y)            
+            elif message['id'] == 'win':
+                self.game.win = True
+                if self.id == message['data']['player_id']:
+                    self.game.winner()
+                else:
+                    self.game.loser()
 
-        else:
-            print(f'[CLIENTE] ERRO: id de msgm recebida não identificada. Mensagem: {message}')
-        # except:
-        # print(f'ERRO HANDLE MSG: {message}')
+            else:
+                print(f'[CLIENTE] ERRO: id de msgm recebida não identificada. Mensagem: {message}')
+
+        except Exception as e:
+            print(f'ERRO HANDLE MSG: {e}\n{message}')
 
     def send_message(self, message):
         try:
-            print('[PLAYER] Enviando msg: ', message['id'])
+            #print('[PLAYER] Enviando msg: ', message['id'])
             msg = pickle.dumps(message)
             send_length = pickle.dumps(len(msg))
 
