@@ -2,7 +2,7 @@ from threading import Thread
 import pygame as pg
 import time
 
-from scenes.game_base import GameBase
+from scenes.game import Game
 from sprites.target import Target
 from sprites.player_online import PlayerOnline
 from sprites.player_guest import PlayerGuest
@@ -16,7 +16,7 @@ from config import *
 vector = pg.math.Vector2
 
 
-class GameMultiplayerHost(GameBase):
+class Host(Game):
 
     def __init__(self, game, window: pg.display):
         super().__init__(game, window)

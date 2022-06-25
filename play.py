@@ -1,9 +1,8 @@
 import pygame as pg
 
-from scenes.game import Game
+from builder import Builder
 from config import *
 
-LVL = 1
 
 if __name__ == '__main__':
 
@@ -12,7 +11,7 @@ if __name__ == '__main__':
     #window = pg.display.set_mode((SCREENWIDTH, SCREENHEIGHT), pg.FULLSCREEN)
     window = pg.display.set_mode((SCREENWIDTH, SCREENHEIGHT), pg.RESIZABLE)
 
-    g = Game(window)
+    g = Builder(window)
 
     while g.run:
         g.currentScene.load()

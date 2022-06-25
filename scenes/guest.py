@@ -3,7 +3,7 @@ from threading import Thread
 import pygame as pg
 import time
 
-from scenes.game_singleplayer import GameSingleplayer
+from scenes.singleplayer import Singleplayer
 from sprites.player_online import PlayerOnline
 from sprites.player_guest import PlayerGuest
 from sprites.text import Text
@@ -14,7 +14,7 @@ from config import *
 vector = pg.math.Vector2
 
 
-class GameMultiplayerGuest(GameSingleplayer):
+class Guest(Singleplayer):
 
     def __init__(self, game, window: pg.display):
         super().__init__(game, window)    

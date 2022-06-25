@@ -1,6 +1,6 @@
 import pygame as pg
 
-from scenes.game_base import GameBase
+from scenes.game import Game
 from sprites.player import Player
 from sprites.target import Target
 from sprites.text import Text
@@ -10,7 +10,7 @@ from config import *
 vector = pg.math.Vector2
 
 
-class GameSingleplayer(GameBase):
+class Singleplayer(Game):
     def __init__(self, game, window: pg.display):
         super().__init__(game, window)
 
